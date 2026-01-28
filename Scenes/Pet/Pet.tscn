@@ -1,3 +1,10 @@
 [gd_scene format=3 uid="uid://c48v01q3u23eh"]
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_utv02"]
+
 [node name="Node2D" type="Node2D" unique_id=737181843]
+
+[node name="PetSprite" type="AnimatedSprite2D" parent="." unique_id=144276634]
+sprite_frames = SubResource("SpriteFrames_utv02")
+
+[node name="TickTimer" type="Timer" parent="." unique_id=1516138708]
