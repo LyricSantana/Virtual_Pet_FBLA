@@ -5,6 +5,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -5.0
+offset_bottom = -5.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -27,9 +29,11 @@ layout_mode = 2
 
 [node name="MoneyLabel" type="Label" parent="MainVerticalLayout/MoneyRow" unique_id=688706900]
 layout_mode = 2
+text = "Money: "
 
 [node name="MoneyLabelUpdate" type="Label" parent="MainVerticalLayout/MoneyRow" unique_id=1210964715]
 layout_mode = 2
+text = "$0"
 
 [node name="ActionButtons" type="HBoxContainer" parent="MainVerticalLayout" unique_id=799427351]
 layout_mode = 2
@@ -53,34 +57,32 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="HungerBar" type="ProgressBar" parent="MainVerticalLayout/StatBars" unique_id=1422334722]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+step = 1.0
 
 [node name="HapinessBar" type="ProgressBar" parent="MainVerticalLayout/StatBars" unique_id=1731323681]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+step = 1.0
 
 [node name="EnergyBar" type="ProgressBar" parent="MainVerticalLayout/StatBars" unique_id=1713903954]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+step = 1.0
 
 [node name="CleanlinessBar" type="ProgressBar" parent="MainVerticalLayout/StatBars" unique_id=175329234]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+step = 1.0
 
 [node name="HealthBar" type="ProgressBar" parent="MainVerticalLayout/StatBars" unique_id=76214545]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+step = 1.0
 
 [node name="ShopButton" type="Button" parent="MainVerticalLayout" unique_id=1344670372]
 layout_mode = 2
 
 [node name="ChoreButton" type="Button" parent="MainVerticalLayout" unique_id=1266447568]
-layout_mode = 2
-
-[node name="PopupPanel" type="PopupPanel" parent="MainVerticalLayout" unique_id=873370814]
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MainVerticalLayout/PopupPanel" unique_id=107240019]
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="DogButton" type="Button" parent="MainVerticalLayout/PopupPanel/VBoxContainer" unique_id=1885283813]
-layout_mode = 2
-
-[node name="CatButton" type="Button" parent="MainVerticalLayout/PopupPanel/VBoxContainer" unique_id=963340054]
 layout_mode = 2
