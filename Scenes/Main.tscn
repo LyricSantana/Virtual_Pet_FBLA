@@ -1,10 +1,10 @@
-[gd_scene format=3 uid="uid://c1e08nkht4cqo"]
+[gd_scene format=3 uid="uid://clh6340ty5tny"]
 
-[ext_resource type="PackedScene" uid="uid://c48v01q3u23eh" path="res://Scenes/Pet/Pet.tscn" id="1_idj7w"]
-[ext_resource type="PackedScene" uid="uid://bb24jfnskfy2x" path="res://Scenes/UI/UI.tscn" id="2_kln2b"]
+[ext_resource type="Script" uid="uid://yywyegfxca5x" path="res://gameManager.cs" id="1_ig7tw"]
 
 [node name="Main" type="Node2D" unique_id=1409503824]
 
-[node name="Pet" parent="." unique_id=737181843 instance=ExtResource("1_idj7w")]
+[node name="gameManager" type="Node" parent="." unique_id=234766452]
+script = ExtResource("1_ig7tw")
 
-[node name="UI" parent="." unique_id=1856775756 instance=ExtResource("2_kln2b")]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1453548270]

@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://dnfm0l7dg6x7n"]
+[gd_scene format=3 uid="uid://bakvg5saigbot"]
 
-[node name="Control" type="Control" unique_id=29790872]
+[node name="chores" type="Control" unique_id=870873151]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

@@ -1,0 +1,176 @@
+[gd_scene format=3 uid="uid://viivuuhvedwk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ll0sn"]
+bg_color = Color(0, 0.6509804, 0.8980392, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dj8aq"]
+bg_color = Color(0, 0.6509804, 0.8980392, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ro3t7"]
+bg_color = Color(0, 0.6509804, 0.8980392, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5en4g"]
+bg_color = Color(0, 0.6509804, 0.8980392, 1)
+
+[node name="Control" type="Control" unique_id=2027993166]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="topBar" type="HBoxContainer" parent="." unique_id=118428058]
+layout_mode = 0
+offset_left = 1.0
+offset_right = 267.0
+offset_bottom = 23.0
+
+[node name="moneyLabel" type="Label" parent="topBar" unique_id=270818191]
+layout_mode = 2
+text = "Money: $0"
+
+[node name="dayLabel" type="Label" parent="topBar" unique_id=399358528]
+layout_mode = 2
+text = "Day: 0"
+
+[node name="statsPanel" type="VBoxContainer" parent="." unique_id=223292621]
+layout_direction = 1
+layout_mode = 0
+offset_left = 165.0
+offset_top = 23.0
+offset_right = 265.0
+offset_bottom = 174.0
+
+[node name="hungerBar" type="ProgressBar" parent="statsPanel" unique_id=457458455]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme_override_styles/fill = SubResource("StyleBoxFlat_ll0sn")
+value = 100.0
+show_percentage = false
+
+[node name="hungerLabel" type="Label" parent="statsPanel/hungerBar" unique_id=1196453405]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Hunger"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="happinessBar" type="ProgressBar" parent="statsPanel" unique_id=195488797]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_dj8aq")
+value = 100.0
+show_percentage = false
+
+[node name="happinessLabel" type="Label" parent="statsPanel/happinessBar" unique_id=1156940517]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Hapiness"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="energyBar" type="ProgressBar" parent="statsPanel" unique_id=1321875619]
+custom_minimum_size = Vector2(50, 25)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_ro3t7")
+value = 100.0
+show_percentage = false
+
+[node name="energyLabel" type="Label" parent="statsPanel/energyBar" unique_id=1307094599]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Energy"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="cleanlinessBar" type="ProgressBar" parent="statsPanel" unique_id=604302239]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_5en4g")
+value = 100.0
+show_percentage = false
+
+[node name="cleanlinessLabel" type="Label" parent="statsPanel/cleanlinessBar" unique_id=1881900686]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Cleanliness"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="healthBar" type="ProgressBar" parent="statsPanel" unique_id=1117723929]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+value = 100.0
+show_percentage = false
+
+[node name="healthLabel" type="Label" parent="statsPanel/healthBar" unique_id=1323510496]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Health"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="actionButtons" type="HBoxContainer" parent="." unique_id=2045156482]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 182.0
+offset_right = 267.0
+offset_bottom = 207.0
+
+[node name="feedButton" type="Button" parent="actionButtons" unique_id=450162685]
+custom_minimum_size = Vector2(50, 25)
+layout_mode = 2
+
+[node name="playButton" type="Button" parent="actionButtons" unique_id=1202573591]
+custom_minimum_size = Vector2(50, 25)
+layout_mode = 2
+
+[node name="cleanButton" type="Button" parent="actionButtons" unique_id=183122434]
+custom_minimum_size = Vector2(50, 25)
+layout_mode = 2
+
+[node name="restButton" type="Button" parent="actionButtons" unique_id=1971839069]
+custom_minimum_size = Vector2(50, 25)
+layout_mode = 2
+
+[node name="vetButton" type="Button" parent="actionButtons" unique_id=767776597]
+custom_minimum_size = Vector2(50, 25)
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="." unique_id=616232826]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 211.0
+offset_right = 267.0
+offset_bottom = 211.0
+
+[node name="TabContainer" type="TabContainer" parent="Panel" unique_id=368744027]
+layout_mode = 0
+offset_right = 236.0
+offset_bottom = 40.0
