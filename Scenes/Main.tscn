@@ -8,6 +8,4 @@
 [node name="gameManager" type="Node" parent="." unique_id=234766452]
 script = ExtResource("1_ig7tw")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1453548270]
-
 [node name="Control" parent="." unique_id=2027993166 instance=ExtResource("2_0wfyh")]

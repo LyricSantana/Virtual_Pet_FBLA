@@ -19,6 +19,12 @@
 [ext_resource type="Texture2D" uid="uid://c0wpu2mpcrw5m" path="res://assets/sprites/buttons/buttonPurpleNormal.png" id="17_38m54"]
 [ext_resource type="Texture2D" uid="uid://crdgkjtusn5ry" path="res://assets/sprites/buttons/buttonPurplePressed.png" id="18_h3f0y"]
 [ext_resource type="Texture2D" uid="uid://6qet031atua0" path="res://assets/sprites/buttons/buttonPurpleHover.png" id="19_yamhi"]
+[ext_resource type="Texture2D" uid="uid://c85wsfnembxhi" path="res://assets/sprites/buttons/buttonGreyNormal.png" id="20_38m54"]
+[ext_resource type="Texture2D" uid="uid://blukix28a5d04" path="res://assets/sprites/buttons/buttonGreyPressed.png" id="21_h3f0y"]
+[ext_resource type="Texture2D" uid="uid://c2p4u0gt0ma8j" path="res://assets/sprites/buttons/buttonGreyHover.png" id="22_yamhi"]
+[ext_resource type="Texture2D" uid="uid://bk03e78fb4poe" path="res://assets/sprites/buttons/buttonBrownNormal.png" id="23_mudns"]
+[ext_resource type="Texture2D" uid="uid://dlufkwg1gxf4h" path="res://assets/sprites/buttons/buttonBrownPressed.png" id="24_knc77"]
+[ext_resource type="Texture2D" uid="uid://wihbfq0j8sno" path="res://assets/sprites/buttons/buttonBrownHover.png" id="25_fm1lg"]
 
 [sub_resource type="Theme" id="Theme_3wlde"]
 
@@ -27,29 +33,37 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 253.0
+offset_top = -56.0
+offset_right = 253.0
+offset_bottom = -56.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="topBar" type="HBoxContainer" parent="." unique_id=118428058]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=496424557]
 layout_mode = 0
-offset_left = 1.0
-offset_right = 267.0
-offset_bottom = 23.0
+offset_left = -246.0
+offset_top = 63.0
+offset_right = -148.0
+offset_bottom = 109.0
 
-[node name="moneyLabel" type="Label" parent="topBar" unique_id=270818191]
+[node name="moneyLabel" type="Label" parent="VBoxContainer" unique_id=270818191]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
 text = "Money: $0"
 
-[node name="dayLabel" type="Label" parent="topBar" unique_id=399358528]
+[node name="dayLabel" type="Label" parent="VBoxContainer" unique_id=399358528]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
 text = "Day: 0"
 
 [node name="statsPanel" type="VBoxContainer" parent="." unique_id=223292621]
 layout_direction = 1
 layout_mode = 0
-offset_top = 37.0
-offset_right = 128.0
-offset_bottom = 143.0
+offset_left = 252.0
+offset_top = 96.0
+offset_right = 380.0
+offset_bottom = 202.0
 
 [node name="hungerBar" type="TextureProgressBar" parent="statsPanel" unique_id=1475928357]
 custom_minimum_size = Vector2(128, 18)
@@ -177,14 +191,14 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="actionButtons" type="HBoxContainer" parent="." unique_id=2045156482]
-custom_minimum_size = Vector2(0, 17)
 layout_mode = 0
-offset_left = 3.0
-offset_top = 147.0
-offset_right = 274.0
-offset_bottom = 164.0
+offset_left = -227.0
+offset_top = 373.0
+offset_right = 359.0
+offset_bottom = 398.0
+theme_override_constants/separation = 26
 
-[node name="TextureButton" type="TextureButton" parent="actionButtons" unique_id=339935574]
+[node name="feedButton" type="TextureButton" parent="actionButtons" unique_id=339935574]
 custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 2
 texture_normal = ExtResource("5_3wlde")
@@ -192,7 +206,7 @@ texture_pressed = ExtResource("6_24e4x")
 texture_hover = ExtResource("6_xpksx")
 stretch_mode = 0
 
-[node name="TextureButton2" type="TextureButton" parent="actionButtons" unique_id=875044464]
+[node name="playButton" type="TextureButton" parent="actionButtons" unique_id=875044464]
 custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 2
 texture_normal = ExtResource("8_w7enk")
@@ -200,7 +214,7 @@ texture_pressed = ExtResource("9_aputy")
 texture_hover = ExtResource("10_7paak")
 stretch_mode = 0
 
-[node name="TextureButton3" type="TextureButton" parent="actionButtons" unique_id=1729834281]
+[node name="restButton" type="TextureButton" parent="actionButtons" unique_id=1729834281]
 custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 2
 texture_normal = ExtResource("11_5sqrc")
@@ -208,7 +222,7 @@ texture_pressed = ExtResource("12_ilk7v")
 texture_hover = ExtResource("13_flkkw")
 stretch_mode = 0
 
-[node name="TextureButton4" type="TextureButton" parent="actionButtons" unique_id=650075625]
+[node name="vetButton" type="TextureButton" parent="actionButtons" unique_id=650075625]
 custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 2
 texture_normal = ExtResource("14_hu0pd")
@@ -216,7 +230,7 @@ texture_pressed = ExtResource("15_o5ifv")
 texture_hover = ExtResource("16_s2vcx")
 stretch_mode = 0
 
-[node name="TextureButton5" type="TextureButton" parent="actionButtons" unique_id=1689068348]
+[node name="cleanButton" type="TextureButton" parent="actionButtons" unique_id=1689068348]
 custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 2
 texture_normal = ExtResource("17_38m54")
@@ -224,14 +238,22 @@ texture_pressed = ExtResource("18_h3f0y")
 texture_hover = ExtResource("19_yamhi")
 stretch_mode = 0
 
-[node name="Panel" type="Panel" parent="." unique_id=616232826]
-layout_mode = 0
-offset_left = 1.0
-offset_top = 211.0
-offset_right = 267.0
-offset_bottom = 211.0
+[node name="shopButton" type="TextureButton" parent="actionButtons" unique_id=2085302910]
+custom_minimum_size = Vector2(76.5, 25.5)
+layout_mode = 2
+texture_normal = ExtResource("23_mudns")
+texture_pressed = ExtResource("24_knc77")
+texture_hover = ExtResource("25_fm1lg")
+stretch_mode = 0
 
-[node name="TabContainer" type="TabContainer" parent="Panel" unique_id=368744027]
+[node name="settingsButton" type="TextureButton" parent="." unique_id=1093563363]
+custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 0
-offset_right = 236.0
-offset_bottom = 40.0
+offset_left = 303.0
+offset_top = 63.0
+offset_right = 380.0
+offset_bottom = 88.5
+texture_normal = ExtResource("20_38m54")
+texture_pressed = ExtResource("21_h3f0y")
+texture_hover = ExtResource("22_yamhi")
+stretch_mode = 0

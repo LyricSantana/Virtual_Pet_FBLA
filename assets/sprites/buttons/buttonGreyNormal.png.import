@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dmd0abq8p0goh"
-path="res://.godot/imported/colorPalette.png-81cafc4717474365162f43493e5e64b9.ctex"
+uid="uid://c85wsfnembxhi"
+path="res://.godot/imported/buttonGreyNormal.png-a9f68b508563fd7b69a1867e0a93b7fc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/colorPalette.png"
-dest_files=["res://.godot/imported/colorPalette.png-81cafc4717474365162f43493e5e64b9.ctex"]
+source_file="res://assets/sprites/buttons/buttonGreyNormal.png"
+dest_files=["res://.godot/imported/buttonGreyNormal.png-a9f68b508563fd7b69a1867e0a93b7fc.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dmd0abq8p0goh"
-path="res://.godot/imported/colorPalette.png-81cafc4717474365162f43493e5e64b9.ctex"
+uid="uid://wihbfq0j8sno"
+path="res://.godot/imported/buttonBrownHover.png-fb945b6746a3fc0f2b02fed6b1c25889.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/colorPalette.png"
-dest_files=["res://.godot/imported/colorPalette.png-81cafc4717474365162f43493e5e64b9.ctex"]
+source_file="res://assets/sprites/buttons/buttonBrownHover.png"
+dest_files=["res://.godot/imported/buttonBrownHover.png-fb945b6746a3fc0f2b02fed6b1c25889.ctex"]
 
 [params]
 
