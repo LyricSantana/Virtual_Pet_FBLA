@@ -1,21 +1,26 @@
 [gd_scene format=3 uid="uid://viivuuhvedwk"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ll0sn"]
-bg_color = Color(0, 0.6509804, 0.8980392, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-corner_detail = 20
+[ext_resource type="Texture2D" uid="uid://ckqwmj0378kgk" path="res://assets/sprites/progressBarRed.png" id="1_5en4g"]
+[ext_resource type="Texture2D" uid="uid://d2j4x8s5hty0v" path="res://assets/sprites/progressBarOutline.png" id="2_ua6yw"]
+[ext_resource type="Texture2D" uid="uid://c0isc30iku41b" path="res://assets/sprites/progressBar.png" id="3_75u2n"]
+[ext_resource type="FontFile" uid="uid://d38hqs8frrw70" path="res://assets/fonts/pixelFont.ttf" id="4_ua6yw"]
+[ext_resource type="Texture2D" uid="uid://dfruyopj0vlna" path="res://assets/sprites/buttons/buttonRedNormal.png" id="5_3wlde"]
+[ext_resource type="Texture2D" uid="uid://dal3tqjmvxx6t" path="res://assets/sprites/buttons/buttonRedPressed.png" id="6_24e4x"]
+[ext_resource type="Texture2D" uid="uid://c8xsknc2507ca" path="res://assets/sprites/buttons/buttonRedHover.png" id="6_xpksx"]
+[ext_resource type="Texture2D" uid="uid://c7fgdjhsguf44" path="res://assets/sprites/buttons/buttonGreenNormal.png" id="8_w7enk"]
+[ext_resource type="Texture2D" uid="uid://cgni784a75p3h" path="res://assets/sprites/buttons/buttonGreenPressed.png" id="9_aputy"]
+[ext_resource type="Texture2D" uid="uid://b3cej6dwooxuk" path="res://assets/sprites/buttons/buttonGreenHover.png" id="10_7paak"]
+[ext_resource type="Texture2D" uid="uid://q8j75tw55nsc" path="res://assets/sprites/buttons/buttonBlueNormal.png" id="11_5sqrc"]
+[ext_resource type="Texture2D" uid="uid://bdu17ffva5xdo" path="res://assets/sprites/buttons/buttonBluePressed.png" id="12_ilk7v"]
+[ext_resource type="Texture2D" uid="uid://djd8o1emsw0g" path="res://assets/sprites/buttons/buttonBlueHover.png" id="13_flkkw"]
+[ext_resource type="Texture2D" uid="uid://c2dk3ojx7owfg" path="res://assets/sprites/buttons/buttonYellowNormal.png" id="14_hu0pd"]
+[ext_resource type="Texture2D" uid="uid://s62uj5skwtcd" path="res://assets/sprites/buttons/buttonYellowPressed.png" id="15_o5ifv"]
+[ext_resource type="Texture2D" uid="uid://fna5b1d4r1sc" path="res://assets/sprites/buttons/buttonYellowHover.png" id="16_s2vcx"]
+[ext_resource type="Texture2D" uid="uid://c0wpu2mpcrw5m" path="res://assets/sprites/buttons/buttonPurpleNormal.png" id="17_38m54"]
+[ext_resource type="Texture2D" uid="uid://crdgkjtusn5ry" path="res://assets/sprites/buttons/buttonPurplePressed.png" id="18_h3f0y"]
+[ext_resource type="Texture2D" uid="uid://6qet031atua0" path="res://assets/sprites/buttons/buttonPurpleHover.png" id="19_yamhi"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dj8aq"]
-bg_color = Color(0, 0.6509804, 0.8980392, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ro3t7"]
-bg_color = Color(0, 0.6509804, 0.8980392, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5en4g"]
-bg_color = Color(0, 0.6509804, 0.8980392, 1)
+[sub_resource type="Theme" id="Theme_3wlde"]
 
 [node name="Control" type="Control" unique_id=2027993166]
 layout_mode = 3
@@ -42,126 +47,182 @@ text = "Day: 0"
 [node name="statsPanel" type="VBoxContainer" parent="." unique_id=223292621]
 layout_direction = 1
 layout_mode = 0
-offset_left = 165.0
-offset_top = 23.0
-offset_right = 265.0
-offset_bottom = 174.0
+offset_top = 37.0
+offset_right = 128.0
+offset_bottom = 143.0
 
-[node name="hungerBar" type="ProgressBar" parent="statsPanel" unique_id=457458455]
-custom_minimum_size = Vector2(0, 25)
+[node name="hungerBar" type="TextureProgressBar" parent="statsPanel" unique_id=1475928357]
+custom_minimum_size = Vector2(128, 18)
 layout_mode = 2
-theme_override_styles/fill = SubResource("StyleBoxFlat_ll0sn")
-value = 100.0
-show_percentage = false
+theme = SubResource("Theme_3wlde")
+value = 50.0
+nine_patch_stretch = true
+texture_under = ExtResource("1_5en4g")
+texture_over = ExtResource("2_ua6yw")
+texture_progress = ExtResource("3_75u2n")
 
 [node name="hungerLabel" type="Label" parent="statsPanel/hungerBar" unique_id=1196453405]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -4.923073
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.04, 1)
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 12
 text = "Hunger"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="happinessBar" type="ProgressBar" parent="statsPanel" unique_id=195488797]
-custom_minimum_size = Vector2(0, 25)
+[node name="happinessBar" type="TextureProgressBar" parent="statsPanel" unique_id=376003765]
+custom_minimum_size = Vector2(128, 18)
 layout_mode = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_dj8aq")
-value = 100.0
-show_percentage = false
+theme = SubResource("Theme_3wlde")
+value = 50.0
+nine_patch_stretch = true
+texture_under = ExtResource("1_5en4g")
+texture_over = ExtResource("2_ua6yw")
+texture_progress = ExtResource("3_75u2n")
 
-[node name="happinessLabel" type="Label" parent="statsPanel/happinessBar" unique_id=1156940517]
+[node name="happinessLabel" type="Label" parent="statsPanel/happinessBar" unique_id=1871352938]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -4.923073
 grow_horizontal = 2
 grow_vertical = 2
-text = "Hapiness"
+scale = Vector2(1.04, 1)
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 12
+text = "Happiness"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="energyBar" type="ProgressBar" parent="statsPanel" unique_id=1321875619]
-custom_minimum_size = Vector2(50, 25)
+[node name="energyBar" type="TextureProgressBar" parent="statsPanel" unique_id=1007370671]
+custom_minimum_size = Vector2(128, 18)
 layout_mode = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_ro3t7")
-value = 100.0
-show_percentage = false
+theme = SubResource("Theme_3wlde")
+value = 50.0
+nine_patch_stretch = true
+texture_under = ExtResource("1_5en4g")
+texture_over = ExtResource("2_ua6yw")
+texture_progress = ExtResource("3_75u2n")
 
-[node name="energyLabel" type="Label" parent="statsPanel/energyBar" unique_id=1307094599]
+[node name="energyLabel" type="Label" parent="statsPanel/energyBar" unique_id=1965591339]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -4.923073
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.04, 1)
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 12
 text = "Energy"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="cleanlinessBar" type="ProgressBar" parent="statsPanel" unique_id=604302239]
-custom_minimum_size = Vector2(0, 25)
+[node name="healthBar" type="TextureProgressBar" parent="statsPanel" unique_id=710239194]
+custom_minimum_size = Vector2(128, 18)
 layout_mode = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_5en4g")
-value = 100.0
-show_percentage = false
+theme = SubResource("Theme_3wlde")
+value = 50.0
+nine_patch_stretch = true
+texture_under = ExtResource("1_5en4g")
+texture_over = ExtResource("2_ua6yw")
+texture_progress = ExtResource("3_75u2n")
 
-[node name="cleanlinessLabel" type="Label" parent="statsPanel/cleanlinessBar" unique_id=1881900686]
+[node name="healthLabel" type="Label" parent="statsPanel/healthBar" unique_id=298940428]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -4.923073
 grow_horizontal = 2
 grow_vertical = 2
-text = "Cleanliness"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="healthBar" type="ProgressBar" parent="statsPanel" unique_id=1117723929]
-custom_minimum_size = Vector2(0, 25)
-layout_mode = 2
-value = 100.0
-show_percentage = false
-
-[node name="healthLabel" type="Label" parent="statsPanel/healthBar" unique_id=1323510496]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+scale = Vector2(1.04, 1)
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 12
 text = "Health"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="cleanBar" type="TextureProgressBar" parent="statsPanel" unique_id=1173227037]
+custom_minimum_size = Vector2(128, 18)
+layout_mode = 2
+theme = SubResource("Theme_3wlde")
+value = 50.0
+nine_patch_stretch = true
+texture_under = ExtResource("1_5en4g")
+texture_over = ExtResource("2_ua6yw")
+texture_progress = ExtResource("3_75u2n")
+
+[node name="cleanLabel" type="Label" parent="statsPanel/cleanBar" unique_id=362965702]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -4.923073
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.04, 1)
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 12
+text = "Cleanliness"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="actionButtons" type="HBoxContainer" parent="." unique_id=2045156482]
+custom_minimum_size = Vector2(0, 17)
 layout_mode = 0
-offset_left = 1.0
-offset_top = 182.0
-offset_right = 267.0
-offset_bottom = 207.0
+offset_left = 3.0
+offset_top = 147.0
+offset_right = 274.0
+offset_bottom = 164.0
 
-[node name="feedButton" type="Button" parent="actionButtons" unique_id=450162685]
-custom_minimum_size = Vector2(50, 25)
+[node name="TextureButton" type="TextureButton" parent="actionButtons" unique_id=339935574]
+custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 2
+texture_normal = ExtResource("5_3wlde")
+texture_pressed = ExtResource("6_24e4x")
+texture_hover = ExtResource("6_xpksx")
+stretch_mode = 0
 
-[node name="playButton" type="Button" parent="actionButtons" unique_id=1202573591]
-custom_minimum_size = Vector2(50, 25)
+[node name="TextureButton2" type="TextureButton" parent="actionButtons" unique_id=875044464]
+custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 2
+texture_normal = ExtResource("8_w7enk")
+texture_pressed = ExtResource("9_aputy")
+texture_hover = ExtResource("10_7paak")
+stretch_mode = 0
 
-[node name="cleanButton" type="Button" parent="actionButtons" unique_id=183122434]
-custom_minimum_size = Vector2(50, 25)
+[node name="TextureButton3" type="TextureButton" parent="actionButtons" unique_id=1729834281]
+custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 2
+texture_normal = ExtResource("11_5sqrc")
+texture_pressed = ExtResource("12_ilk7v")
+texture_hover = ExtResource("13_flkkw")
+stretch_mode = 0
 
-[node name="restButton" type="Button" parent="actionButtons" unique_id=1971839069]
-custom_minimum_size = Vector2(50, 25)
+[node name="TextureButton4" type="TextureButton" parent="actionButtons" unique_id=650075625]
+custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 2
+texture_normal = ExtResource("14_hu0pd")
+texture_pressed = ExtResource("15_o5ifv")
+texture_hover = ExtResource("16_s2vcx")
+stretch_mode = 0
 
-[node name="vetButton" type="Button" parent="actionButtons" unique_id=767776597]
-custom_minimum_size = Vector2(50, 25)
+[node name="TextureButton5" type="TextureButton" parent="actionButtons" unique_id=1689068348]
+custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 2
+texture_normal = ExtResource("17_38m54")
+texture_pressed = ExtResource("18_h3f0y")
+texture_hover = ExtResource("19_yamhi")
+stretch_mode = 0
 
 [node name="Panel" type="Panel" parent="." unique_id=616232826]
 layout_mode = 0
