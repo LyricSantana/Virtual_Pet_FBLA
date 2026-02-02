@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://viivuuhvedwk"]
 
 [ext_resource type="Texture2D" uid="uid://ckqwmj0378kgk" path="res://assets/sprites/progressBarRed.png" id="1_5en4g"]
+[ext_resource type="Script" uid="uid://d0d7ihi7xvr16" path="res://src/ui.gd" id="1_us6mg"]
 [ext_resource type="Texture2D" uid="uid://d2j4x8s5hty0v" path="res://assets/sprites/progressBarOutline.png" id="2_ua6yw"]
 [ext_resource type="Texture2D" uid="uid://c0isc30iku41b" path="res://assets/sprites/progressBar.png" id="3_75u2n"]
 [ext_resource type="FontFile" uid="uid://d38hqs8frrw70" path="res://assets/fonts/pixelFont.ttf" id="4_ua6yw"]
@@ -33,19 +34,16 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 253.0
-offset_top = -56.0
-offset_right = 253.0
-offset_bottom = -56.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_us6mg")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=496424557]
 layout_mode = 0
-offset_left = -246.0
-offset_top = 63.0
-offset_right = -148.0
-offset_bottom = 109.0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 105.0
+offset_bottom = 53.0
 
 [node name="moneyLabel" type="Label" parent="VBoxContainer" unique_id=270818191]
 layout_mode = 2
@@ -60,10 +58,10 @@ text = "Day: 0"
 [node name="statsPanel" type="VBoxContainer" parent="." unique_id=223292621]
 layout_direction = 1
 layout_mode = 0
-offset_left = 252.0
-offset_top = 96.0
-offset_right = 380.0
-offset_bottom = 202.0
+offset_left = 505.0
+offset_top = 40.0
+offset_right = 633.0
+offset_bottom = 146.0
 
 [node name="hungerBar" type="TextureProgressBar" parent="statsPanel" unique_id=1475928357]
 custom_minimum_size = Vector2(128, 18)
@@ -192,10 +190,10 @@ vertical_alignment = 1
 
 [node name="actionButtons" type="HBoxContainer" parent="." unique_id=2045156482]
 layout_mode = 0
-offset_left = -227.0
-offset_top = 373.0
-offset_right = 359.0
-offset_bottom = 398.0
+offset_left = 26.0
+offset_top = 317.0
+offset_right = 612.0
+offset_bottom = 342.0
 theme_override_constants/separation = 26
 
 [node name="feedButton" type="TextureButton" parent="actionButtons" unique_id=339935574]
@@ -249,10 +247,10 @@ stretch_mode = 0
 [node name="settingsButton" type="TextureButton" parent="." unique_id=1093563363]
 custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 0
-offset_left = 303.0
-offset_top = 63.0
-offset_right = 380.0
-offset_bottom = 88.5
+offset_left = 556.0
+offset_top = 7.0
+offset_right = 633.0
+offset_bottom = 32.5
 texture_normal = ExtResource("20_38m54")
 texture_pressed = ExtResource("21_h3f0y")
 texture_hover = ExtResource("22_yamhi")
