@@ -1,11 +1,35 @@
 {
-    "name": "Frank",
-	"species": "cat",
-	"hunger": 100,
-	"happiness": 100,
-	"energy": 100,
-	"health": 100,
-	"cleanliness": 100,
+	"current_pet": "cat",
+	"money": 0,
 	"day": 0,
-	"level": 1
+	"level": 1,
+
+	"stats": {
+		"hunger": 100,
+		"happiness": 100,
+		"energy": 100,
+		"health": 100,
+		"cleanliness": 100
+	},
+
+	"inventories": {
+		"feed": {
+			"apple": 1
+		},
+		"play": {
+
+		},
+		"rest": {
+
+		},
+		"vet": {
+
+		},
+		"clean": {
+
+		},
+		"pets": {
+
+		}
+	}
 }

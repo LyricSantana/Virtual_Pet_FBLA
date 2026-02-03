@@ -1,55 +1,55 @@
 extends Control
 
+@onready var day_label: Label = get_node("labels/dayLabel")
 
 func _ready():
-	saveLoadManager.load_json_file("res://src/defaultSave.json")
-	saveLoadManager.loadGame()
 	_connect_buttons(self)
 
-func _connect_buttons(node: Node):
+func _connect_buttons(node: Node) -> void:
 	for child in node.get_children():
 		if child is TextureButton:
 			child.pressed.connect(on_button_pressed.bind(child))
 		_connect_buttons(child)
 
-func on_button_pressed(button: TextureButton):
+func _process(delta: float) -> void:
+	if day_label:
+		day_label.text = "Seconds:" + str(gameManager.get_seconds_into_day())
+
+func on_button_pressed(button: TextureButton) -> void:
 	match button.name:
 		"feedButton":
-			feedPressed()
+			feed_pressed()
 		"playButton":
-			playPressed()
+			play_pressed()
 		"restButton":
-			restPressed()
+			rest_pressed()
 		"vetButton":
-			vetPressed()
+			vet_pressed()
 		"cleanButton":
-			cleanPressed()
+			clean_pressed()
 		"shopButton":
-			shopPressed()
+			shop_pressed()
 		"settingsButton":
-			settingsPressed()
+			settings_pressed()
 
-func feedPressed():
+
+func feed_pressed():
 	print("Feed button was pressed")
-	print(saveLoadManager.playerData["species"])
- 
-func playPressed():
+
+func play_pressed():
 	print("Play button was pressed")
-	saveLoadManager.playerData["species"] = "dog"
- 
-func restPressed():
+
+func rest_pressed():
 	print("Rest button was pressed")
-	saveLoadManager.saveGame()
- 
-func vetPressed():
+
+func vet_pressed():
 	print("Vet button was pressed")
- 
-func cleanPressed():
+
+func clean_pressed():
 	print("Clean button was pressed")
- 
-func shopPressed():
+
+func shop_pressed():
 	print("Shop button was pressed")
- 
-func settingsPressed():
-	print("Settings Button was Pressed")
-	
+
+func settings_pressed():
+	print("Settings button was pressed")
