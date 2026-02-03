@@ -1,10 +1,33 @@
 [gd_scene format=3 uid="uid://c5i72a0j62dqq"]
 
-[ext_resource type="Script" uid="uid://bbkidvnfgn1kg" path="res://petLogic.cs" id="1_mdqe4"]
+[ext_resource type="Texture2D" uid="uid://dgv5cdm43yhc2" path="res://assets/sprites/pets/cat/catNormal1.png" id="1_qckc7"]
+[ext_resource type="Texture2D" uid="uid://bqssdd6cvbq6s" path="res://assets/sprites/pets/cat/catNormal2.png" id="2_df2ap"]
 
-[node name="pet" type="Node2D" unique_id=1335299720]
-script = ExtResource("1_mdqe4")
+[sub_resource type="SpriteFrames" id="SpriteFrames_u6lfn"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_qckc7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_df2ap")
+}],
+"loop": true,
+"name": &"normal",
+"speed": 1.0
+}]
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=887538969]
+[node name="pet" type="Node2D" unique_id=1501936118]
 
-[node name="Node2D" type="Node2D" parent="." unique_id=1886707296]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=366684739]
+position = Vector2(311, 185)
+scale = Vector2(2.28125, 2.28125)
+sprite_frames = SubResource("SpriteFrames_u6lfn")
+animation = &"normal"
+autoplay = "normal"
+frame_progress = 0.91685253

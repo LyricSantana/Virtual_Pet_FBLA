@@ -1,6 +1,9 @@
 extends Control
 
+
 func _ready():
+	saveLoadManager.load_json_file("res://src/defaultSave.json")
+	saveLoadManager.loadGame()
 	_connect_buttons(self)
 
 func _connect_buttons(node: Node):
@@ -28,12 +31,15 @@ func on_button_pressed(button: TextureButton):
 
 func feedPressed():
 	print("Feed button was pressed")
+	print(saveLoadManager.playerData["species"])
  
 func playPressed():
 	print("Play button was pressed")
+	saveLoadManager.playerData["species"] = "dog"
  
 func restPressed():
 	print("Rest button was pressed")
+	saveLoadManager.saveGame()
  
 func vetPressed():
 	print("Vet button was pressed")

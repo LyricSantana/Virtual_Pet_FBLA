@@ -1,0 +1,11 @@
+{
+    "name": "Frank",
+	"species": "cat",
+	"hunger": 100,
+	"happiness": 100,
+	"energy": 100,
+	"health": 100,
+	"cleanliness": 100,
+	"day": 0,
+	"level": 1
+}
