@@ -26,8 +26,19 @@
 [ext_resource type="Texture2D" uid="uid://bk03e78fb4poe" path="res://assets/sprites/buttons/buttonBrownNormal.png" id="23_mudns"]
 [ext_resource type="Texture2D" uid="uid://dlufkwg1gxf4h" path="res://assets/sprites/buttons/buttonBrownPressed.png" id="24_knc77"]
 [ext_resource type="Texture2D" uid="uid://wihbfq0j8sno" path="res://assets/sprites/buttons/buttonBrownHover.png" id="25_fm1lg"]
+[ext_resource type="Texture2D" uid="uid://c3puc8v7byvq7" path="res://assets/sprites/backgrounds/placeHolder.png" id="27_fm1lg"]
+[ext_resource type="Texture2D" uid="uid://bpeehld1bxsla" path="res://assets/sprites/settingsPopup.png" id="28_qd4ol"]
+[ext_resource type="Texture2D" uid="uid://b3p0g1q27i5q2" path="res://assets/sprites/buttons/backButtonNormal.png" id="29_hgu3j"]
+[ext_resource type="Texture2D" uid="uid://buslewa8nyb51" path="res://assets/sprites/buttons/backButtonPressed.png" id="30_bqcyk"]
+[ext_resource type="Texture2D" uid="uid://dsba6w785wx01" path="res://assets/sprites/buttons/backButtonHover.png" id="31_7lcob"]
 
 [sub_resource type="Theme" id="Theme_3wlde"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dmln7"]
+bg_color = Color(0, 0, 0, 0.6862745)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_grh26"]
+texture = ExtResource("28_qd4ol")
 
 [node name="UI" type="Control" unique_id=2027993166]
 layout_mode = 3
@@ -54,6 +65,11 @@ text = "Money: $0"
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_ua6yw")
 text = "Day: 0"
+
+[node name="nameLabel" type="Label" parent="labels" unique_id=203175633]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+text = "Name: "
 
 [node name="statsPanel" type="VBoxContainer" parent="." unique_id=223292621]
 layout_direction = 1
@@ -163,7 +179,7 @@ text = "Health"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="cleanBar" type="TextureProgressBar" parent="statsPanel" unique_id=1173227037]
+[node name="cleanlinessBar" type="TextureProgressBar" parent="statsPanel" unique_id=1173227037]
 custom_minimum_size = Vector2(128, 18)
 layout_mode = 2
 theme = SubResource("Theme_3wlde")
@@ -173,7 +189,7 @@ texture_under = ExtResource("1_5en4g")
 texture_over = ExtResource("2_ua6yw")
 texture_progress = ExtResource("3_75u2n")
 
-[node name="cleanLabel" type="Label" parent="statsPanel/cleanBar" unique_id=362965702]
+[node name="cleanLabel" type="Label" parent="statsPanel/cleanlinessBar" unique_id=362965702]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -190,14 +206,14 @@ vertical_alignment = 1
 
 [node name="actionButtons" type="HBoxContainer" parent="." unique_id=2045156482]
 layout_mode = 0
-offset_left = 26.0
-offset_top = 317.0
-offset_right = 612.0
-offset_bottom = 342.0
-theme_override_constants/separation = 26
+offset_left = 21.0
+offset_top = 310.0
+offset_right = 616.0
+offset_bottom = 341.0
+theme_override_constants/separation = 5
 
 [node name="feedButton" type="TextureButton" parent="actionButtons" unique_id=339935574]
-custom_minimum_size = Vector2(76.5, 25.5)
+custom_minimum_size = Vector2(95.625, 31.875)
 layout_mode = 2
 texture_normal = ExtResource("5_3wlde")
 texture_pressed = ExtResource("6_24e4x")
@@ -205,7 +221,7 @@ texture_hover = ExtResource("6_xpksx")
 stretch_mode = 0
 
 [node name="playButton" type="TextureButton" parent="actionButtons" unique_id=875044464]
-custom_minimum_size = Vector2(76.5, 25.5)
+custom_minimum_size = Vector2(95.625, 31.875)
 layout_mode = 2
 texture_normal = ExtResource("8_w7enk")
 texture_pressed = ExtResource("9_aputy")
@@ -213,7 +229,7 @@ texture_hover = ExtResource("10_7paak")
 stretch_mode = 0
 
 [node name="restButton" type="TextureButton" parent="actionButtons" unique_id=1729834281]
-custom_minimum_size = Vector2(76.5, 25.5)
+custom_minimum_size = Vector2(95.625, 31.875)
 layout_mode = 2
 texture_normal = ExtResource("11_5sqrc")
 texture_pressed = ExtResource("12_ilk7v")
@@ -221,7 +237,7 @@ texture_hover = ExtResource("13_flkkw")
 stretch_mode = 0
 
 [node name="vetButton" type="TextureButton" parent="actionButtons" unique_id=650075625]
-custom_minimum_size = Vector2(76.5, 25.5)
+custom_minimum_size = Vector2(95.625, 31.875)
 layout_mode = 2
 texture_normal = ExtResource("14_hu0pd")
 texture_pressed = ExtResource("15_o5ifv")
@@ -229,7 +245,7 @@ texture_hover = ExtResource("16_s2vcx")
 stretch_mode = 0
 
 [node name="cleanButton" type="TextureButton" parent="actionButtons" unique_id=1689068348]
-custom_minimum_size = Vector2(76.5, 25.5)
+custom_minimum_size = Vector2(95.625, 31.875)
 layout_mode = 2
 texture_normal = ExtResource("17_38m54")
 texture_pressed = ExtResource("18_h3f0y")
@@ -237,7 +253,7 @@ texture_hover = ExtResource("19_yamhi")
 stretch_mode = 0
 
 [node name="shopButton" type="TextureButton" parent="actionButtons" unique_id=2085302910]
-custom_minimum_size = Vector2(76.5, 25.5)
+custom_minimum_size = Vector2(95.625, 31.875)
 layout_mode = 2
 texture_normal = ExtResource("23_mudns")
 texture_pressed = ExtResource("24_knc77")
@@ -254,4 +270,38 @@ offset_bottom = 32.5
 texture_normal = ExtResource("20_38m54")
 texture_pressed = ExtResource("21_h3f0y")
 texture_hover = ExtResource("22_yamhi")
+stretch_mode = 0
+
+[node name="backGround" type="TextureRect" parent="." unique_id=327784508]
+z_index = -5
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 360.0
+mouse_filter = 2
+texture = ExtResource("27_fm1lg")
+
+[node name="settingsPanel" type="Panel" parent="." unique_id=715437813]
+z_index = 5
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 360.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_dmln7")
+
+[node name="settingsPopup" type="Panel" parent="settingsPanel" unique_id=1453406828]
+layout_mode = 0
+offset_left = -17.0
+offset_right = 623.0
+offset_bottom = 360.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_grh26")
+
+[node name="backButton" type="TextureButton" parent="settingsPanel/settingsPopup" unique_id=491727091]
+custom_minimum_size = Vector2(76.5, 25.5)
+layout_mode = 0
+offset_left = 298.0
+offset_top = 259.0
+offset_right = 375.0
+offset_bottom = 284.5
+texture_normal = ExtResource("29_hgu3j")
+texture_pressed = ExtResource("30_bqcyk")
+texture_hover = ExtResource("31_7lcob")
 stretch_mode = 0

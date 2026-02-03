@@ -1,0 +1,213 @@
+[gd_scene format=3 uid="uid://4uf1lnelxd5q"]
+
+[ext_resource type="Script" uid="uid://6yrqsfqmnj28" path="res://src/start.gd" id="1_bodal"]
+[ext_resource type="Texture2D" uid="uid://brr7en27lmvqr" path="res://assets/sprites/buttons/catButtonNormal.png" id="2_tn317"]
+[ext_resource type="Texture2D" uid="uid://cgt8xb20rmp3r" path="res://assets/sprites/buttons/startButtonNormal.png" id="2_y16t7"]
+[ext_resource type="Texture2D" uid="uid://dv3oalljmmkmm" path="res://assets/sprites/buttons/catButtonPressed.png" id="3_1nvso"]
+[ext_resource type="Texture2D" uid="uid://op8dr53l62ah" path="res://assets/sprites/buttons/startButtonPressed.png" id="3_4ge6i"]
+[ext_resource type="Texture2D" uid="uid://c85wsfnembxhi" path="res://assets/sprites/buttons/buttonGreyNormal.png" id="3_lb6bl"]
+[ext_resource type="Texture2D" uid="uid://vr6y12hm0j0r" path="res://assets/sprites/buttons/startButtonHover.png" id="4_8itgj"]
+[ext_resource type="Texture2D" uid="uid://d0boixk7yrjvb" path="res://assets/sprites/buttons/catButtonHover.png" id="4_pgjjs"]
+[ext_resource type="Texture2D" uid="uid://dtvuu6s16h5q2" path="res://assets/sprites/buttons/dogButtonNormal.png" id="5_pgjjs"]
+[ext_resource type="Texture2D" uid="uid://c7af1eq8wwkmk" path="res://assets/sprites/buttons/dogButtonHover.png" id="6_1nvso"]
+[ext_resource type="Texture2D" uid="uid://wrjcbaueas8c" path="res://assets/sprites/buttons/dogButtonPressed.png" id="6_gsp51"]
+[ext_resource type="FontFile" uid="uid://d38hqs8frrw70" path="res://assets/fonts/pixelFont.ttf" id="7_gsp51"]
+[ext_resource type="Texture2D" uid="uid://b3p0g1q27i5q2" path="res://assets/sprites/buttons/backButtonNormal.png" id="12_x1pfr"]
+[ext_resource type="Texture2D" uid="uid://buslewa8nyb51" path="res://assets/sprites/buttons/backButtonPressed.png" id="13_n0tym"]
+[ext_resource type="Texture2D" uid="uid://dsba6w785wx01" path="res://assets/sprites/buttons/backButtonHover.png" id="14_8jfef"]
+[ext_resource type="Texture2D" uid="uid://blukix28a5d04" path="res://assets/sprites/buttons/buttonGreyPressed.png" id="16_qfvu4"]
+[ext_resource type="Texture2D" uid="uid://c2p4u0gt0ma8j" path="res://assets/sprites/buttons/buttonGreyHover.png" id="17_twuju"]
+[ext_resource type="Texture2D" uid="uid://bpeehld1bxsla" path="res://assets/sprites/settingsPopup.png" id="18_aox1m"]
+[ext_resource type="Texture2D" uid="uid://c0wpu2mpcrw5m" path="res://assets/sprites/buttons/buttonPurpleNormal.png" id="19_hp05y"]
+[ext_resource type="Texture2D" uid="uid://crdgkjtusn5ry" path="res://assets/sprites/buttons/buttonPurplePressed.png" id="20_g3i1d"]
+[ext_resource type="Texture2D" uid="uid://6qet031atua0" path="res://assets/sprites/buttons/buttonPurpleHover.png" id="21_cdrmf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u80x2"]
+bg_color = Color(0.13496137, 0.6625398, 0.8052275, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp05y"]
+bg_color = Color(0, 0, 0, 0.6862745)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g3i1d"]
+texture = ExtResource("18_aox1m")
+
+[node name="start" type="Control" unique_id=134240700]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_bodal")
+
+[node name="petSelectPanel" type="Panel" parent="." unique_id=51194941]
+process_mode = 3
+top_level = true
+z_index = -1
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 360.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_u80x2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="petSelectPanel" unique_id=768017436]
+process_mode = 3
+layout_mode = 0
+offset_left = 209.0
+offset_top = 101.0
+offset_right = 409.0
+offset_bottom = 301.0
+mouse_filter = 2
+alignment = 1
+
+[node name="titleLabel" type="Label" parent="petSelectPanel/VBoxContainer" unique_id=1894006734]
+process_mode = 3
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_gsp51")
+theme_override_font_sizes/font_size = 19
+text = "Create a Pet"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="petSelectPanel/VBoxContainer" unique_id=2024957984]
+process_mode = 3
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+alignment = 1
+
+[node name="catButton" type="TextureButton" parent="petSelectPanel/VBoxContainer/HBoxContainer" unique_id=1012202981]
+process_mode = 3
+layout_mode = 2
+size_flags_horizontal = 3
+texture_normal = ExtResource("2_tn317")
+texture_pressed = ExtResource("3_1nvso")
+texture_hover = ExtResource("4_pgjjs")
+stretch_mode = 4
+
+[node name="dogButton" type="TextureButton" parent="petSelectPanel/VBoxContainer/HBoxContainer" unique_id=380767935]
+process_mode = 3
+layout_mode = 2
+size_flags_horizontal = 3
+texture_normal = ExtResource("5_pgjjs")
+texture_pressed = ExtResource("6_gsp51")
+texture_hover = ExtResource("6_1nvso")
+stretch_mode = 4
+
+[node name="nameInput" type="LineEdit" parent="petSelectPanel/VBoxContainer" unique_id=1784518070]
+process_mode = 3
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_gsp51")
+placeholder_text = "Name"
+
+[node name="confirmButton" type="TextureButton" parent="petSelectPanel/VBoxContainer" unique_id=2046718307]
+process_mode = 3
+layout_mode = 2
+size_flags_vertical = 3
+texture_normal = ExtResource("2_y16t7")
+texture_pressed = ExtResource("3_4ge6i")
+texture_hover = ExtResource("4_8itgj")
+stretch_mode = 5
+
+[node name="backButton" type="TextureButton" parent="petSelectPanel/VBoxContainer" unique_id=1577411614]
+process_mode = 3
+layout_mode = 2
+size_flags_vertical = 3
+texture_normal = ExtResource("12_x1pfr")
+texture_pressed = ExtResource("13_n0tym")
+texture_hover = ExtResource("14_8jfef")
+stretch_mode = 5
+
+[node name="errorLabel" type="Label" parent="petSelectPanel/VBoxContainer" unique_id=1649059632]
+process_mode = 3
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_gsp51")
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="startPanel" type="Panel" parent="." unique_id=1333893442]
+process_mode = 3
+top_level = true
+z_index = -1
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 360.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_u80x2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="startPanel" unique_id=1403230932]
+process_mode = 3
+layout_mode = 0
+offset_left = 259.0
+offset_top = 138.0
+offset_right = 319.0
+offset_bottom = 176.0
+scale = Vector2(2, 2)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+alignment = 1
+
+[node name="startButton" type="TextureButton" parent="startPanel/VBoxContainer" unique_id=1806528494]
+process_mode = 3
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = ExtResource("2_y16t7")
+texture_pressed = ExtResource("3_4ge6i")
+texture_hover = ExtResource("4_8itgj")
+
+[node name="settingsButton" type="TextureButton" parent="startPanel/VBoxContainer" unique_id=525681165]
+process_mode = 3
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("3_lb6bl")
+texture_pressed = ExtResource("16_qfvu4")
+texture_hover = ExtResource("17_twuju")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=718663738]
+layer = 5
+
+[node name="settingsPanel" type="Panel" parent="CanvasLayer" unique_id=1990612308]
+z_index = 5
+offset_right = 640.0
+offset_bottom = 360.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hp05y")
+
+[node name="settingsPopup" type="Panel" parent="CanvasLayer/settingsPanel" unique_id=1625499725]
+layout_mode = 0
+offset_left = -17.0
+offset_right = 623.0
+offset_bottom = 360.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_g3i1d")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/settingsPanel/settingsPopup" unique_id=1854276479]
+layout_mode = 0
+offset_left = 299.0
+offset_top = 235.0
+offset_right = 375.0
+offset_bottom = 289.0
+
+[node name="deleteButton" type="TextureButton" parent="CanvasLayer/settingsPanel/settingsPopup/VBoxContainer" unique_id=1634676640]
+z_index = 12
+custom_minimum_size = Vector2(76.5, 25.5)
+layout_mode = 2
+texture_normal = ExtResource("19_hp05y")
+texture_pressed = ExtResource("20_g3i1d")
+texture_hover = ExtResource("21_cdrmf")
+stretch_mode = 0
+
+[node name="backButton" type="TextureButton" parent="CanvasLayer/settingsPanel/settingsPopup/VBoxContainer" unique_id=1883215278]
+z_index = 12
+custom_minimum_size = Vector2(76.5, 25.5)
+layout_mode = 2
+texture_normal = ExtResource("12_x1pfr")
+texture_pressed = ExtResource("13_n0tym")
+texture_hover = ExtResource("14_8jfef")
+stretch_mode = 0

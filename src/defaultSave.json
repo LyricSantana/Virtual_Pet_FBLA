@@ -1,5 +1,6 @@
 {
-	"current_pet": "cat",
+	"current_pet": "",
+	"name": "",
 	"money": 0,
 	"day": 0,
 	"level": 1,

@@ -24,7 +24,7 @@ animations = [{
 
 [node name="pet" type="Node2D" unique_id=1501936118]
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=366684739]
+[node name="catAnimated" type="AnimatedSprite2D" parent="." unique_id=366684739]
 position = Vector2(311, 185)
 scale = Vector2(2.28125, 2.28125)
 sprite_frames = SubResource("SpriteFrames_u6lfn")
