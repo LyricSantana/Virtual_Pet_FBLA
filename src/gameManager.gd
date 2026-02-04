@@ -1,84 +1,88 @@
 extends Node
 
-# TODO: change day length
-# how many seconds a full in-game day lasts (5 minutes)
-const DAY_LENGTH := 10.0
+# how long a full in-game day lasts in seconds (5 minutes)
+const DAY_LENGTH := 300.0
 
-# how often stats automatically change (in seconds)
+# how often stats automatically change (seconds)
 const STAT_TICK := 5.0
 
+# how often the game auto-saves (seconds)
+const SAVE_TICK := 30.0
 
-# keep track of the current day and how far we are into it
+# current day and seconds passed in the day
 var current_day: int
 var seconds_into_day: float = 0.0
 
-# counts time for stat updates
+# accumulators for ticking stats and saving
 var stat_accumulator: float = 0.0
+var save_accumulator: float = 0.0
 
-# lets us speed up or slow down time if needed
+# speed control for time (1.0 = normal speed)
 var time_scale: float = 1.0
 
-# if true, time stops and the game is frozen
+# whether the game is paused
 var is_paused: bool = false
 
-
-# lets other scripts know when a day has passed
+# signal emitted whenever a day passes
 signal day_passed(new_day: int)
 
 
 func _ready() -> void:
-	# load the current day from the save safely
+	# initialize current day from save, default 0
 	if saveLoadManager.playerData.has("day"):
-		current_day = saveLoadManager.playerData["day"]
+		current_day = int(saveLoadManager.playerData["day"])
 	else:
 		current_day = 0
-		saveLoadManager.playerData["day"] = 0
+		saveLoadManager.playerData["day"] = current_day
 
 
 func _process(delta: float) -> void:
-	# do nothing if the game is paused
+	# do nothing while paused
 	if is_paused:
 		return
 
-	# apply time scaling (for speed-up or slow-down later)
-	var scaled_delta := delta * time_scale
-
-	# advance time
+	# scale delta by time speed
+	var scaled_delta = delta * time_scale
 	seconds_into_day += scaled_delta
 	stat_accumulator += scaled_delta
+	save_accumulator += scaled_delta
 
-	# update stats every STAT_TICK seconds
+	# handle stat updates (support multiple ticks if lagged)
 	if stat_accumulator >= STAT_TICK:
-		# handle multiple ticks in case of lag
-		var ticks := int(stat_accumulator / STAT_TICK)
+		var ticks = int(stat_accumulator / STAT_TICK)
 		stat_accumulator -= ticks * STAT_TICK
 		_update_stats(ticks)
 
-	# check if one or more full days passed
+	# handle auto-save
+	if save_accumulator >= SAVE_TICK:
+		var ticks = int(save_accumulator / SAVE_TICK)
+		save_accumulator -= ticks * SAVE_TICK
+		saveLoadManager.saveGame()
+		print(ticks)
+
+	# advance day if enough time has passed
 	while seconds_into_day >= DAY_LENGTH:
 		seconds_into_day -= DAY_LENGTH
 		_advance_day()
 
 
-# pauses the entire game (time, physics, animations, etc.)
+# pause the whole game using engine pause
 func pause_game() -> void:
 	if is_paused:
 		return
-
 	is_paused = true
 	get_tree().paused = true
 
 
-# resumes the game after being paused
+# resume the game
 func resume_game() -> void:
 	if not is_paused:
 		return
-
 	is_paused = false
 	get_tree().paused = false
 
 
-# simple helper for toggling pause on/off
+# toggle pause state
 func toggle_pause() -> void:
 	if is_paused:
 		resume_game()
@@ -86,66 +90,68 @@ func toggle_pause() -> void:
 		pause_game()
 
 
-# decreases stats over time
+# update stats each tick
 func _update_stats(ticks: int) -> void:
 	var pd = saveLoadManager.playerData
-
-	# make sure stats exist before touching them
 	if not pd.has("stats"):
 		return
 
-	# decrease each stat once per tick
+	# decrease global player stats
 	for key in pd["stats"].keys():
-		pd["stats"][key] -= 5 * ticks
+		pd["stats"][key] = pd["stats"].get(key, 0) - (5 * ticks)
 
-	# clamp stats to valid ranges
+	# decrease stats for the current pet
+	var pet_id = pd.get("current_pet", "")
+	if pet_id != "":
+		var pet = petManager.get_pet(pet_id)
+		if pet:
+			for stat_key in pet["stats"].keys():
+				pet["stats"][stat_key] = clamp(pet["stats"].get(stat_key, 0) - (5 * ticks), 0, 100)
+
+	# clamp all global stats to valid ranges
 	saveLoadManager.clampValues(pd)
 
-	# save so progress isn't lost
-	saveLoadManager.saveGame()
 
-
-# moves the game forward by one day
+# advance the day by 1
 func _advance_day() -> void:
 	current_day += 1
 	saveLoadManager.playerData["day"] = current_day
-
-	# tell other systems a new day started
 	emit_signal("day_passed", current_day)
-
-	# apply daily effects
 	_on_day_end()
 
 
-# runs effects that happen once per day
+# apply daily effects at the end of the day
 func _on_day_end() -> void:
 	var pd = saveLoadManager.playerData
-
 	if not pd.has("stats"):
 		return
 
-	# example daily effects
-	pd["stats"]["hunger"] -= 10
-	pd["stats"]["energy"] = min(pd["stats"]["energy"] + 20, 100)
+	# example global effects: hunger decreases, energy recovers
+	pd["stats"]["hunger"] = pd["stats"].get("hunger", 0) - 10
+	pd["stats"]["energy"] = min(pd["stats"].get("energy", 0) + 20, 100)
 
-	# keep everything in range and save
+	# effects for the current pet
+	var pet_id = pd.get("current_pet", "")
+	if pet_id != "":
+		var pet = petManager.get_pet(pet_id)
+		if pet:
+			pet["stats"]["hunger"] = max(pet["stats"].get("hunger", 0) - 5, 0)
+			pet["stats"]["energy"] = min(pet["stats"].get("energy", 0) + 10, 100)
+
 	saveLoadManager.clampValues(pd)
 	saveLoadManager.saveGame()
 
 
-# returns how many seconds have passed in the current day
+# return how many whole seconds have passed in the current day
 func get_seconds_into_day() -> int:
 	return int(seconds_into_day)
 
 
-# debug helper: max out all stats instantly
+# debug helper: fill every stat to max (100)
 func allMax() -> void:
 	var pd = saveLoadManager.playerData
-
 	if not pd.has("stats"):
 		return
-
 	for key in pd["stats"].keys():
 		pd["stats"][key] = 100
-
 	saveLoadManager.saveGame()

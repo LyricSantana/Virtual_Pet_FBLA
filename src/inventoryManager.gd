@@ -1,103 +1,98 @@
 extends Node
 
+# helpers for managing inventories
+# uses saveLoadManager.playerData
 
-# Internal helpers
+
+# get top-level inventories dictionary, create if missing
 func _get_inventories() -> Dictionary:
-	return saveLoadManager.playerData.get("inventories", {})
+	if not saveLoadManager.playerData.has("inventories"):
+		saveLoadManager.playerData["inventories"] = {}
+	return saveLoadManager.playerData["inventories"]
 
 
+# get a specific inventory, auto-create it if missing
 func _get_inventory(inventory_name: String) -> Dictionary:
-	var inventories = _get_inventories()
-
-	if not inventories.has(inventory_name):
-		# Auto-create inventory if it doesn't exist
-		inventories[inventory_name] = {}
-
-	return inventories[inventory_name]
+	var invs = _get_inventories()
+	if not invs.has(inventory_name):
+		invs[inventory_name] = {}
+	return invs[inventory_name]
 
 
-# Check if an inventory exists
+# check if an inventory exists
 func hasInventory(inventory_name: String) -> bool:
 	return _get_inventories().has(inventory_name)
 
 
-# Get quantity of an item (safe)
+# get how many of a certain item exist in an inventory
 func getItemCount(inventory_name: String, item_id: String) -> int:
 	var inventory = _get_inventory(inventory_name)
-	return inventory.get(item_id, 0)
+	return int(inventory.get(item_id, 0))
 
 
-# Check if item exists (count > 0)
+# check if inventory has at least one of an item
 func hasItem(inventory_name: String, item_id: String) -> bool:
 	return getItemCount(inventory_name, item_id) > 0
 
 
-# Add item(s) to an inventory
+# add items to an inventory, amount defaults to 1
 func addItem(inventory_name: String, item_id: String, amount: int = 1) -> void:
 	if amount <= 0:
 		return
-
 	var inventory = _get_inventory(inventory_name)
 	inventory[item_id] = inventory.get(item_id, 0) + amount
 	saveLoadManager.saveGame()
 
 
-# Remove item(s) from an inventory
+# remove items from inventory, returns true if successful
 func removeItem(inventory_name: String, item_id: String, amount: int = 1) -> bool:
 	if amount <= 0:
 		return false
-
 	var inventory = _get_inventory(inventory_name)
-
 	if not inventory.has(item_id):
 		return false
-
 	inventory[item_id] -= amount
-
 	if inventory[item_id] <= 0:
 		inventory.erase(item_id)
-
 	saveLoadManager.saveGame()
 	return true
 
 
-# Set item count directly (overwrites)
+# set an item's count directly (overwrites existing count)
 func setItemCount(inventory_name: String, item_id: String, amount: int) -> void:
 	var inventory = _get_inventory(inventory_name)
-
 	if amount <= 0:
 		inventory.erase(item_id)
 	else:
 		inventory[item_id] = amount
-
 	saveLoadManager.saveGame()
 
 
-# Remove an item completely
+# remove an item completely from an inventory
 func clearItem(inventory_name: String, item_id: String) -> void:
 	var inventory = _get_inventory(inventory_name)
 	inventory.erase(item_id)
 	saveLoadManager.saveGame()
 
 
-# Clear an entire inventory
+# remove all items from an inventory
 func clearInventory(inventory_name: String) -> void:
 	var inventory = _get_inventory(inventory_name)
 	inventory.clear()
 	saveLoadManager.saveGame()
 
 
-# Get a COPY of an inventory (safe for UI)
+# get a deep copy of an inventory so UI can use it safely
 func getInventory(inventory_name: String) -> Dictionary:
 	return _get_inventory(inventory_name).duplicate(true)
 
 
-# Get all inventories
+# get a deep copy of all inventories
 func getAllInventories() -> Dictionary:
 	return _get_inventories().duplicate(true)
 
 
-# Loop helper (useful for UI)
+# get a list of item IDs in an inventory (good for UI loops)
 func getInventoryItems(inventory_name: String) -> Array:
 	var inventory = _get_inventory(inventory_name)
 	return inventory.keys()

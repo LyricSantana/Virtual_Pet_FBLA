@@ -3,7 +3,7 @@ extends Control
 var startButton
 var settingsButton
 var petPanel
-var start_panel
+var startPanel
 var catButton
 var dogButton
 var nameInput
@@ -13,16 +13,17 @@ var backButton
 var settingsPanel
 var settingsBackButton
 var deleteButton
+var settingsCanvas
 
 var chosen_species: String = ""
 
 func _ready() -> void:
 	gameManager.pause_game()
-	# get nodes safely (paths are relative to this scene root)
+
 	startButton   = get_node_or_null("startPanel/VBoxContainer/startButton")
 	settingsButton = get_node_or_null("startPanel/VBoxContainer/settingsButton")
+	startPanel = get_node_or_null("startPanel")
 	petPanel   = get_node_or_null("petSelectPanel")
-	start_panel = get_node_or_null("startPanel")
 	catButton     = get_node_or_null("petSelectPanel/VBoxContainer/HBoxContainer/catButton")
 	dogButton     = get_node_or_null("petSelectPanel/VBoxContainer/HBoxContainer/dogButton")
 	nameInput  = get_node_or_null("petSelectPanel/VBoxContainer/nameInput")
@@ -32,10 +33,19 @@ func _ready() -> void:
 	settingsPanel = get_node_or_null("CanvasLayer/settingsPanel")
 	settingsBackButton = get_node_or_null("CanvasLayer/settingsPanel/settingsPopup/VBoxContainer/backButton")
 	deleteButton = get_node_or_null("CanvasLayer/settingsPanel/settingsPopup/VBoxContainer/deleteButton")
+	settingsCanvas = get_node_or_null("CanvasLayer")
 
-	settingsPanel.visible = false
+	# Correct initial visibility
+	if settingsPanel:
+		settingsPanel.visible = false
+	if petPanel:
+		petPanel.visible = false  # hide pet selection initially
+	if startPanel:
+		startPanel.visible = true  # show start screen
+	if settingsCanvas:
+		settingsCanvas.visible = true
 
-	# connect signals only if the nodes actually exist
+	# connect button signals...
 	if startButton:
 		startButton.pressed.connect(_on_start_pressed)
 	if settingsButton:
@@ -46,8 +56,6 @@ func _ready() -> void:
 		dogButton.pressed.connect(_on_dog_pressed)
 	if confirmButton:
 		confirmButton.pressed.connect(_on_confirm_pressed)
-	if errorLabel:
-		errorLabel.text = ""
 	if backButton:
 		backButton.pressed.connect(_on_back_pressed)
 	if settingsBackButton:
@@ -55,24 +63,23 @@ func _ready() -> void:
 	if deleteButton:
 		deleteButton.pressed.connect(_on_delete_pressed)
 
-	start_panel.visible = true
-	petPanel.visible = true
+	if errorLabel:
+		errorLabel.text = ""
 
 func _on_start_pressed() -> void:
 	if user_save_exists():
 		saveLoadManager.loadGame()
+		var cur_pet_id: String = str(saveLoadManager.playerData.get("current_pet", ""))
+		if cur_pet_id != "":
+			# first, tell PetManager to load the pet node
+			petManager.set_current_pet(cur_pet_id)
 		_change_to_game()
 	else:
 		_show_pet_select()
 
-
-# TODO: add settings
 func _on_settings_pressed() -> void:
-	if settingsPanel.visible:
-		settingsPanel.visible = false
-	else:
-		settingsPanel.visible = true
-	return
+	if settingsPanel:
+		settingsPanel.visible = not settingsPanel.visible
 
 func _show_pet_select() -> void:
 	chosen_species = ""
@@ -82,14 +89,15 @@ func _show_pet_select() -> void:
 		errorLabel.text = ""
 	if petPanel:
 		petPanel.visible = true
-	start_panel.visible = false
+	if startPanel:
+		startPanel.visible = false
 
 func _on_cat_pressed() -> void:
-	chosen_species = "cat"
+	chosen_species = "starter_cat"
 	_highlight_choice(catButton, dogButton)
 
 func _on_dog_pressed() -> void:
-	chosen_species = "dog"
+	chosen_species = "starter_dog"
 	_highlight_choice(dogButton, catButton)
 
 func _highlight_choice(selected: TextureButton, other: TextureButton) -> void:
@@ -99,9 +107,10 @@ func _highlight_choice(selected: TextureButton, other: TextureButton) -> void:
 		other.modulate = Color(0.6,0.6,0.6)
 
 func _on_confirm_pressed() -> void:
-	var pet_name := ""
+	var pet_name: String = ""
 	if nameInput:
 		pet_name = nameInput.text.strip_edges()
+
 	if pet_name == "":
 		if errorLabel:
 			errorLabel.text = "Please enter a name."
@@ -111,32 +120,49 @@ func _on_confirm_pressed() -> void:
 			errorLabel.text = "Please pick a species."
 		return
 
-	_create_new_save(chosen_species, pet_name)
+	var pet_id: String = _create_new_save(chosen_species, pet_name)
 	_change_to_game()
+	petManager.set_current_pet(pet_id) # ensures correct node + animation
 
 func _on_back_pressed() -> void:
-	start_panel.visible = true
+	if startPanel:
+		startPanel.visible = true
+	if petPanel:
+		petPanel.visible = false
 
-func _create_new_save(species: String, pet_name: String) -> void:
-	# start from defaults and apply choices
-	saveLoadManager.resetData()
-	saveLoadManager.playerData["current_pet"] = species
+func _create_new_save(species_choice: String, pet_name: String) -> String:
+	var defaults := saveLoadManager.loadJSON("res://src/defaultSave.json")
+	var user_from_disk := saveLoadManager.loadJSON("user://player_save.json")
+	saveLoadManager.playerData = saveLoadManager.mergeDicts(defaults, user_from_disk)
+
+	var pet_id: String = petManager.create_pet(species_choice, pet_name)
+
+	saveLoadManager.playerData["inventories"] = saveLoadManager.playerData.get("inventories", {})
+	saveLoadManager.playerData["inventories"]["pets"] = saveLoadManager.playerData["inventories"].get("pets", {})
+	saveLoadManager.playerData["inventories"]["pets"][pet_id] = petManager.get_pet(pet_id)
+
+	saveLoadManager.playerData["current_pet"] = pet_id
 	saveLoadManager.playerData["name"] = pet_name
 	saveLoadManager.playerData["day"] = 0
+
 	saveLoadManager.clampValues(saveLoadManager.playerData)
 	saveLoadManager.saveGame()
 
+	return pet_id
 
 func _change_to_game() -> void:
-	_show_pet_select()
-	petPanel.visible = false
+	if petPanel:
+		petPanel.visible = false
+	if startPanel:
+		startPanel.visible = false
 	gameManager.resume_game()
 
 func user_save_exists() -> bool:
 	return FileAccess.file_exists("user://player_save.json")
 
-func _on_settings_back_pressed():
-	settingsPanel.visible = false
+func _on_settings_back_pressed() -> void:
+	if settingsPanel:
+		settingsPanel.visible = false
 
-func _on_delete_pressed():
+func _on_delete_pressed() -> void:
 	saveLoadManager.delete_user_file("player_save.json")

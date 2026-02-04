@@ -3,9 +3,12 @@
 [ext_resource type="Texture2D" uid="uid://ckqwmj0378kgk" path="res://assets/sprites/progressBarRed.png" id="1_5en4g"]
 [ext_resource type="Script" uid="uid://d0d7ihi7xvr16" path="res://src/ui.gd" id="1_us6mg"]
 [ext_resource type="Texture2D" uid="uid://d2j4x8s5hty0v" path="res://assets/sprites/progressBarOutline.png" id="2_ua6yw"]
+[ext_resource type="Texture2D" uid="uid://ca523gvvgbu2t" path="res://assets/sprites/buttons/editButtonNormal.png" id="3_7lcob"]
 [ext_resource type="Texture2D" uid="uid://c0isc30iku41b" path="res://assets/sprites/progressBar.png" id="3_75u2n"]
 [ext_resource type="FontFile" uid="uid://d38hqs8frrw70" path="res://assets/fonts/pixelFont.ttf" id="4_ua6yw"]
 [ext_resource type="Texture2D" uid="uid://dfruyopj0vlna" path="res://assets/sprites/buttons/buttonRedNormal.png" id="5_3wlde"]
+[ext_resource type="Texture2D" uid="uid://c3xu1eadgnpb7" path="res://assets/sprites/buttons/editButtonPressed.png" id="5_5r2ug"]
+[ext_resource type="Texture2D" uid="uid://cuq8kh8ur3aws" path="res://assets/sprites/buttons/editButtonHover.png" id="5_cpqi3"]
 [ext_resource type="Texture2D" uid="uid://dal3tqjmvxx6t" path="res://assets/sprites/buttons/buttonRedPressed.png" id="6_24e4x"]
 [ext_resource type="Texture2D" uid="uid://c8xsknc2507ca" path="res://assets/sprites/buttons/buttonRedHover.png" id="6_xpksx"]
 [ext_resource type="Texture2D" uid="uid://c7fgdjhsguf44" path="res://assets/sprites/buttons/buttonGreenNormal.png" id="8_w7enk"]
@@ -27,10 +30,13 @@
 [ext_resource type="Texture2D" uid="uid://dlufkwg1gxf4h" path="res://assets/sprites/buttons/buttonBrownPressed.png" id="24_knc77"]
 [ext_resource type="Texture2D" uid="uid://wihbfq0j8sno" path="res://assets/sprites/buttons/buttonBrownHover.png" id="25_fm1lg"]
 [ext_resource type="Texture2D" uid="uid://c3puc8v7byvq7" path="res://assets/sprites/backgrounds/placeHolder.png" id="27_fm1lg"]
-[ext_resource type="Texture2D" uid="uid://bpeehld1bxsla" path="res://assets/sprites/settingsPopup.png" id="28_qd4ol"]
+[ext_resource type="Texture2D" uid="uid://bpeehld1bxsla" path="res://assets/sprites/popupPanel.png" id="28_qd4ol"]
 [ext_resource type="Texture2D" uid="uid://b3p0g1q27i5q2" path="res://assets/sprites/buttons/backButtonNormal.png" id="29_hgu3j"]
 [ext_resource type="Texture2D" uid="uid://buslewa8nyb51" path="res://assets/sprites/buttons/backButtonPressed.png" id="30_bqcyk"]
 [ext_resource type="Texture2D" uid="uid://dsba6w785wx01" path="res://assets/sprites/buttons/backButtonHover.png" id="31_7lcob"]
+[ext_resource type="Texture2D" uid="uid://bn8nnqq8r6l53" path="res://assets/sprites/buttons/enterButtonNormal.png" id="35_qnnsw"]
+[ext_resource type="Texture2D" uid="uid://dyoog0cvnly6g" path="res://assets/sprites/buttons/enterButtonPressed.png" id="36_xg5gc"]
+[ext_resource type="Texture2D" uid="uid://ckxsw7aedakge" path="res://assets/sprites/buttons/enterButtonHover.png" id="37_tlqq8"]
 
 [sub_resource type="Theme" id="Theme_3wlde"]
 
@@ -66,10 +72,23 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("4_ua6yw")
 text = "Day: 0"
 
-[node name="nameLabel" type="Label" parent="labels" unique_id=203175633]
+[node name="nameBox" type="HBoxContainer" parent="labels" unique_id=1322616518]
+layout_mode = 2
+
+[node name="nameLabel" type="Label" parent="labels/nameBox" unique_id=203175633]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_ua6yw")
 text = "Name: "
+
+[node name="changeNameButton" type="TextureButton" parent="labels/nameBox" unique_id=30408023]
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+texture_normal = ExtResource("3_7lcob")
+texture_pressed = ExtResource("5_5r2ug")
+texture_hover = ExtResource("5_cpqi3")
+stretch_mode = 4
 
 [node name="statsPanel" type="VBoxContainer" parent="." unique_id=223292621]
 layout_direction = 1
@@ -280,21 +299,27 @@ offset_bottom = 360.0
 mouse_filter = 2
 texture = ExtResource("27_fm1lg")
 
-[node name="settingsPanel" type="Panel" parent="." unique_id=715437813]
+[node name="popupPanel" type="Panel" parent="." unique_id=715437813]
+process_mode = 3
+visible = false
 z_index = 5
 layout_mode = 0
 offset_right = 640.0
 offset_bottom = 360.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_dmln7")
 
-[node name="settingsPopup" type="Panel" parent="settingsPanel" unique_id=1453406828]
+[node name="settingsPopup" type="Panel" parent="popupPanel" unique_id=1453406828]
+process_mode = 3
+z_index = 8
 layout_mode = 0
 offset_left = -17.0
 offset_right = 623.0
 offset_bottom = 360.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_grh26")
 
-[node name="backButton" type="TextureButton" parent="settingsPanel/settingsPopup" unique_id=491727091]
+[node name="backButton" type="TextureButton" parent="popupPanel/settingsPopup" unique_id=491727091]
+process_mode = 3
+z_index = 47
 custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 0
 offset_left = 298.0
@@ -305,3 +330,43 @@ texture_normal = ExtResource("29_hgu3j")
 texture_pressed = ExtResource("30_bqcyk")
 texture_hover = ExtResource("31_7lcob")
 stretch_mode = 0
+
+[node name="changeName" type="VBoxContainer" parent="popupPanel" unique_id=896243516]
+process_mode = 3
+z_index = 31
+layout_mode = 0
+offset_left = 223.0
+offset_top = 72.0
+offset_right = 415.0
+offset_bottom = 297.0
+mouse_filter = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="changeNameInput" type="LineEdit" parent="popupPanel/changeName" unique_id=1458512733]
+process_mode = 3
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("4_ua6yw")
+placeholder_text = "New Name"
+max_length = 12
+
+[node name="submitNameButton" type="TextureButton" parent="popupPanel/changeName" unique_id=1503177363]
+process_mode = 3
+custom_minimum_size = Vector2(76.5, 25.5)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("35_qnnsw")
+texture_pressed = ExtResource("36_xg5gc")
+texture_hover = ExtResource("37_tlqq8")
+stretch_mode = 4
+
+[node name="errorLabel" type="Label" parent="popupPanel/changeName" unique_id=2005846358]
+process_mode = 3
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://d2cffdqbwjktc"]
+[gd_scene format=3 uid="uid://do3hcmafw16sx"]
 
 [ext_resource type="Script" uid="uid://d3gfoulr4hg3j" path="res://src/gameManager.gd" id="1_idj7w"]
 [ext_resource type="PackedScene" uid="uid://viivuuhvedwk" path="res://scenes/UI.tscn" id="2_0wfyh"]
@@ -17,6 +17,7 @@ script = ExtResource("2_rgh2o")
 [node name="Control" parent="." unique_id=2027993166 instance=ExtResource("2_0wfyh")]
 
 [node name="pet" parent="." unique_id=1501936118 instance=ExtResource("3_kln2b")]
+script = null
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=988908203]
 
