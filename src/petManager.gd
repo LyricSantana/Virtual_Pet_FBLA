@@ -67,7 +67,6 @@ func _get_template_stats(template: String) -> Dictionary:
 	}
 	return templates.get(template, {"hunger": 100, "happiness": 100, "energy": 100, "health": 100, "cleanliness": 100})
 
-
 # ----------------------
 # pet CRUD
 # ----------------------
@@ -133,19 +132,20 @@ func set_current_pet(pet_id: String) -> bool:
 # template resolution / animation
 # ----------------------
 func _resolve_template(pet_template: String) -> String:
+	# always trust the argument first
 	if pet_template != "":
 		return pet_template
 
+	# fallback: read current pet's template
 	var pd = _get_player_data()
 	var current_id: String = str(pd.get("current_pet", ""))
 	if current_id != "":
 		var pet = get_pet(current_id)
 		if pet.has("template"):
 			return str(pet["template"])
-	return ""  # do not default to cat
+	return ""  # no default, do not guess cat
 
 func changePetAnimation(pet_template: String = "") -> void:
-	# defer to ensure scene is ready
 	call_deferred("_changePetAnimationDeferred", pet_template)
 
 func _changePetAnimationDeferred(pet_template: String) -> void:
@@ -156,7 +156,6 @@ func _changePetAnimationDeferred(pet_template: String) -> void:
 	_play_pet_animation(template_name)
 
 func _play_pet_animation(template_name: String) -> void:
-	# If the node doesn't exist yet, defer the call
 	if not current_pet_node:
 		call_deferred("_play_pet_animation", template_name)
 		return
@@ -170,7 +169,6 @@ func _play_pet_animation(template_name: String) -> void:
 	if current_pet_node is AnimatedSprite2D:
 		current_pet_node.play(anim_name)
 
-
 # ----------------------
 # pet node instantiation
 # ----------------------
@@ -180,22 +178,9 @@ func _load_pet_node_from_template(pet_id: String) -> void:
 		return
 	var template_name: String = str(pet["template"])
 
+	# If you already have a pet node, just play the correct animation
 	if current_pet_node:
-		current_pet_node.queue_free()
-		current_pet_node = null
-
-	var scene_path: String = "res://pets/%s.tscn" % template_name
-	if not ResourceLoader.exists(scene_path):
-		push_warning("_load_pet_node_from_template: scene not found: %s" % scene_path)
-		return
-
-	current_pet_node = load(scene_path).instantiate() as AnimatedSprite2D
-	var root: Node = get_tree().current_scene
-	if root:
-		root.add_child(current_pet_node)
-		current_pet_node.position = Vector2.ZERO
-
-	_play_pet_animation(template_name)
+		_play_pet_animation(template_name)
 
 # ----------------------
 # starter pet creation
@@ -224,7 +209,7 @@ func create_starter_pet(chosen_template: String) -> String:
 			saveLoadManager.playerData["current_pet"] = id
 			saveLoadManager.saveGame()
 		player_data = pd
-		_load_pet_node_from_template(id)
+		_load_pet_node_from_template(id)  # loads correct pet immediately
 		return id
 
 	return str(pd.get("current_pet", ""))
