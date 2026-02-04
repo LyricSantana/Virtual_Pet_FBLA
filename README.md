@@ -12,6 +12,7 @@ responsibility of pet ownership. Track things like:
 • Vet visits or health care
 • Toy or activity purchases
 • Budget limits or in-game currency
+
 Your program should include:
 • Customization (user names the pet, chooses type, etc.)
 • Pet care features (feed, play, rest, clean, health check)
