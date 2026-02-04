@@ -1,5 +1,5 @@
 # FBLA Virtual Pet Game 2026
-Project for Introduction to Programming for FBLA 2026 made using Godot (C#) and Aseprite (pixel art).
+Project for Introduction to Programming for FBLA 2026 made using Godot (GDScript) and Aseprite (pixel art).
 
 ## 2026 Topic:
 Build a Virtual Pet
