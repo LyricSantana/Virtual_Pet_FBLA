@@ -20,13 +20,16 @@ petManager="*uid://ehcpn5yax4p2"
 saveLoadManager="*uid://btvonyyh6rqk4"
 inventoryManager="*uid://s6m82enaiyhs"
 gameManager="*uid://d3gfoulr4hg3j"
-Start="*uid://6yrqsfqmnj28"
+itemDB="*uid://qqtq4foy1ro"
+startScreen="*uid://4uf1lnelxd5q"
 
 [display]
 
 window/size/viewport_width=640
 window/size/viewport_height=360
 window/size/mode=3
+window/stretch/mode="canvas_items"
+window/stretch/scale_mode="integer"
 
 [dotnet]
 

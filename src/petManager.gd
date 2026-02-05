@@ -1,12 +1,12 @@
 extends Node2D
 
 @onready var petNode: AnimatedSprite2D = $petSprite
-@onready var thoughtIcon: TextureRect = $petSprite/thought  # TextureRect overlay for moods/icons
+@onready var thoughtIcon: TextureRect = $thought   # <-- sibling, not child of sprite
 
 # Cache all thought icons
-var icons: Dictionary = {}
+var icons: Dictionary[String, Texture2D] = {}
 
-var playerData: Dictionary = {}  # currently loaded player data
+var playerData: Dictionary = {}
 
 func _ready() -> void:
 	if petNode.sprite_frames == null:
@@ -15,7 +15,12 @@ func _ready() -> void:
 
 	print("Animations:", petNode.sprite_frames.get_animation_names())
 
-	# Load all icons once
+	# Ensure thought icon renders correctly
+	thoughtIcon.visible = false
+	thoughtIcon.z_index = 50
+	thoughtIcon.process_mode = Node.PROCESS_MODE_ALWAYS
+
+	# Preload icons
 	icons = {
 		"hungry": load("res://assets/sprites/thoughtIcons/hungryIcon.png"),
 		"sad":    load("res://assets/sprites/thoughtIcons/sadIcon.png"),
@@ -24,63 +29,52 @@ func _ready() -> void:
 		"dirty":  load("res://assets/sprites/thoughtIcons/dirtyIcon.png")
 	}
 
-# --- Public API ---
 func set_player_data(data: Dictionary) -> void:
-	if data == null:
-		push_error("set_player_data received null")
+	if data == null or data.is_empty():
+		push_error("set_player_data received invalid data")
 		return
+	print("Thought:", thoughtIcon.texture, " visible:", thoughtIcon.visible)
 	playerData = data
 	update_pet_animation()
 
+
 func update_pet_animation() -> void:
-	if petNode.sprite_frames == null or playerData.size() == 0:
+	if playerData.is_empty():
 		return
 
 	var stats = playerData.get("stats", {})
-	var species = playerData.get("species", "dog")  # default species if missing
+	var species: String = playerData.get("species", "dog")
 
-	var anim_name = species + "Normal"
-	var thought_texture: Texture = null
+	var anim_name := species + "Normal"
+	var thought_key: String = ""
 
-	# --- Determine emotion/thought based on stats ---
+	# Priority-based thoughts
 	if stats.get("health", 100) <= 50:
-		anim_name = species + "Thinking"
-		thought_texture = icons.get("sick")
+		thought_key = "sick"
 	elif stats.get("hunger", 100) <= 50:
-		anim_name = species + "Thinking"
-		thought_texture = icons.get("hungry")
+		thought_key = "hungry"
 	elif stats.get("happiness", 100) <= 40:
-		anim_name = species + "Thinking"
-		thought_texture = icons.get("sad")
+		thought_key = "sad"
 	elif stats.get("energy", 100) <= 30:
-		anim_name = species + "Thinking"
-		thought_texture = icons.get("tired")
+		thought_key = "tired"
 	elif stats.get("cleanliness", 100) <= 50:
+		thought_key = "dirty"
+
+	# Thinking vs normal
+	if thought_key != "":
 		anim_name = species + "Thinking"
-		thought_texture = icons.get("dirty")
-	# else leave as Normal
+		thoughtIcon.texture = icons[thought_key]
+		thoughtIcon.visible = true
+	else:
+		thoughtIcon.texture = null
+		thoughtIcon.visible = false
 
-	# --- Update thought icon overlay ---
-	if thoughtIcon:
-		thoughtIcon.texture = thought_texture
-
-	# --- Play animation safely ---
+	# Play animation safely
 	if petNode.sprite_frames.has_animation(anim_name):
 		petNode.play(anim_name)
 	else:
-		# fallback to Normal animation if specific one is missing
-		if petNode.sprite_frames.has_animation(species + "Normal"):
-			petNode.play(species + "Normal")
-		else:
-			push_error("No valid animation found for species: " + species)
+		petNode.play(species + "Normal")
 
-# Optional: play a specific animation manually
-func play_pet_animation(animation: String) -> void:
-	if petNode.sprite_frames == null:
-		push_error("Cannot play animation, SpriteFrames null")
-		return
-
-	if petNode.sprite_frames.has_animation(animation):
-		petNode.play(animation)
-	else:
-		push_error("Unknown animation: " + animation)
+func set_thought_visible(isVisible: bool) -> void:
+	if thoughtIcon:
+		thoughtIcon.visible = isVisible

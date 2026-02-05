@@ -16,6 +16,7 @@ func _get_inventory(inventory_name: String) -> Dictionary:
 	var invs = _get_inventories()
 	if not invs.has(inventory_name):
 		invs[inventory_name] = {}
+	# Return a reference to the **actual dictionary** in playerData, not a copy
 	return invs[inventory_name]
 
 
@@ -51,11 +52,25 @@ func removeItem(inventory_name: String, item_id: String, amount: int = 1) -> boo
 	var inventory = _get_inventory(inventory_name)
 	if not inventory.has(item_id):
 		return false
-	inventory[item_id] -= amount
-	if inventory[item_id] <= 0:
-		inventory.erase(item_id)
+
+	var entry = inventory[item_id]
+
+	if typeof(entry) == TYPE_DICTIONARY:
+		# subtract from "count"
+		entry["count"] = int(entry.get("count", 0)) - amount
+		if entry["count"] <= 0:
+			inventory.erase(item_id)
+	else:
+		# legacy numeric format
+		var new_count = int(entry) - amount
+		if new_count <= 0:
+			inventory.erase(item_id)
+		else:
+			inventory[item_id] = new_count
+
 	saveLoadManager.saveGame()
 	return true
+
 
 
 # set an item's count directly (overwrites existing count)

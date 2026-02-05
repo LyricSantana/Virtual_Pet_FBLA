@@ -132,7 +132,6 @@ vertical_alignment = 1
 
 [node name="startPanel" type="Panel" parent="." unique_id=1333893442]
 process_mode = 3
-visible = false
 top_level = true
 z_index = -1
 layout_mode = 0
@@ -172,10 +171,11 @@ texture_pressed = ExtResource("16_qfvu4")
 texture_hover = ExtResource("17_twuju")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=718663738]
+process_mode = 3
 layer = 5
-visible = false
 
 [node name="settingsPanel" type="Panel" parent="CanvasLayer" unique_id=1990612308]
+process_mode = 3
 z_index = 5
 offset_right = 640.0
 offset_bottom = 360.0
@@ -183,14 +183,16 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hp05y")
 
 [node name="settingsPopup" type="Panel" parent="CanvasLayer/settingsPanel" unique_id=1625499725]
+process_mode = 3
 layout_mode = 0
-offset_left = -17.0
-offset_right = 623.0
+offset_left = -2.0
+offset_right = 638.0
 offset_bottom = 360.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_g3i1d")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/settingsPanel/settingsPopup" unique_id=1854276479]
+process_mode = 3
 layout_mode = 0
 offset_left = 299.0
 offset_top = 235.0
@@ -198,6 +200,7 @@ offset_right = 375.0
 offset_bottom = 289.0
 
 [node name="deleteButton" type="TextureButton" parent="CanvasLayer/settingsPanel/settingsPopup/VBoxContainer" unique_id=1634676640]
+process_mode = 3
 z_index = 12
 custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 2
@@ -207,6 +210,7 @@ texture_hover = ExtResource("21_cdrmf")
 stretch_mode = 0
 
 [node name="backButton" type="TextureButton" parent="CanvasLayer/settingsPanel/settingsPopup/VBoxContainer" unique_id=1883215278]
+process_mode = 3
 z_index = 12
 custom_minimum_size = Vector2(76.5, 25.5)
 layout_mode = 2

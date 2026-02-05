@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://s6m82enaiyhs" path="res://src/inventoryManager.gd" id="2_rgh2o"]
 [ext_resource type="PackedScene" uid="uid://ehcpn5yax4p2" path="res://Scenes/petManager.tscn" id="5_pbw6q"]
 [ext_resource type="PackedScene" uid="uid://4uf1lnelxd5q" path="res://Scenes/start.tscn" id="5_vcsgt"]
+[ext_resource type="Script" uid="uid://qqtq4foy1ro" path="res://src/itemDB.gd" id="6_v1gob"]
 
 [node name="Main" type="Node2D" unique_id=1409503824]
 
@@ -14,11 +15,17 @@ script = ExtResource("1_idj7w")
 [node name="inventoryManager" type="Node" parent="." unique_id=527619751]
 script = ExtResource("2_rgh2o")
 
-[node name="Control" parent="." unique_id=2027993166 instance=ExtResource("2_0wfyh")]
+[node name="startLayer" type="CanvasLayer" parent="." unique_id=988908203]
+layer = 3
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=988908203]
-
-[node name="start" parent="CanvasLayer" unique_id=134240700 instance=ExtResource("5_vcsgt")]
+[node name="start" parent="startLayer" unique_id=134240700 instance=ExtResource("5_vcsgt")]
+z_index = 1
 
 [node name="pet" parent="." unique_id=766304925 instance=ExtResource("5_pbw6q")]
 script = null
+
+[node name="UI" parent="." unique_id=2027993166 instance=ExtResource("2_0wfyh")]
+z_index = 1
+
+[node name="itemDB" type="Node" parent="." unique_id=1908936356]
+script = ExtResource("6_v1gob")

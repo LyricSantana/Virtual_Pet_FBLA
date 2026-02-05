@@ -56,18 +56,31 @@ func saveJSON(path: String, data: Dictionary) -> bool:
 
 
 # merge default dictionary with user dictionary (user overrides defaults)
-func mergeDicts(default: Dictionary, user: Dictionary) -> Dictionary:
-	var result := {}
-	# copy default values first
-	for k in default.keys():
-		result[k] = default[k]
-	# override with user values
-	for k in user.keys():
-		if result.has(k) and typeof(result[k]) == TYPE_DICTIONARY and typeof(user[k]) == TYPE_DICTIONARY:
-			result[k] = mergeDicts(result[k], user[k])
+# merge default dictionary with user dictionary (user overrides defaults)
+func mergeDicts(defaults: Dictionary, user_data: Dictionary) -> Dictionary:
+	var result = defaults.duplicate(true)
+
+	for key in user_data.keys():
+		var user_val = user_data[key]
+
+		# if user explicitly provided a dictionary for this key, treat it as an override
+		if typeof(user_val) == TYPE_DICTIONARY:
+			# if the user dict is empty, use it (this means user removed defaults)
+			if user_val.size() == 0:
+				result[key] = {}
+			else:
+				# if default also has a dict, merge recursively
+				if result.has(key) and typeof(result[key]) == TYPE_DICTIONARY:
+					result[key] = mergeDicts(result[key], user_val)
+				else:
+					result[key] = user_val.duplicate(true)
 		else:
-			result[k] = user[k]
+			# primitive / non-dict values: user overrides default
+			result[key] = user_val
+
 	return result
+
+
 
 
 # save current in-memory playerData to disk
