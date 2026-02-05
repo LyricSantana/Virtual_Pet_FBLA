@@ -1,21 +1,23 @@
-extends AnimatedSprite2D
+extends Node2D
 
-func _ready() -> void:
-	if sprite_frames == null:
+@onready var petNode = $petSprite
+
+func _ready():
+	if petNode.sprite_frames == null:
 		push_error("SpriteFrames is NULL — scene binding broken")
-	else:
-		print("Animations:", sprite_frames.get_animation_names())
+		return
 
+	print("Animations:", petNode.sprite_frames.get_animation_names())
 
 func play_pet_animation(species: String) -> void:
-	if sprite_frames == null:
+	if petNode.sprite_frames == null:
 		push_error("Cannot play animation, SpriteFrames null")
 		return
 
 	match species:
 		"dog":
-			play("dogNormal")
+			petNode.play("dogNormal")
 		"cat":
-			play("catNormal")
+			petNode.play("catNormal")
 		_:
 			push_error("Unknown species: " + species)

@@ -28,6 +28,7 @@ signal day_passed(new_day: int)
 
 
 func _ready() -> void:
+
 	# initialize current day from save, default 0
 	if saveLoadManager.playerData.has("day"):
 		current_day = int(saveLoadManager.playerData["day"])
@@ -101,12 +102,6 @@ func _update_stats(ticks: int) -> void:
 		pd["stats"][key] = pd["stats"].get(key, 0) - (5 * ticks)
 
 	# decrease stats for the current pet
-	var pet_id = pd.get("current_pet", "")
-	if pet_id != "":
-		var pet = petManager.get_pet(pet_id)
-		if pet:
-			for stat_key in pet["stats"].keys():
-				pet["stats"][stat_key] = clamp(pet["stats"].get(stat_key, 0) - (5 * ticks), 0, 100)
 
 	# clamp all global stats to valid ranges
 	saveLoadManager.clampValues(pd)
@@ -131,12 +126,6 @@ func _on_day_end() -> void:
 	pd["stats"]["energy"] = min(pd["stats"].get("energy", 0) + 20, 100)
 
 	# effects for the current pet
-	var pet_id = pd.get("current_pet", "")
-	if pet_id != "":
-		var pet = petManager.get_pet(pet_id)
-		if pet:
-			pet["stats"]["hunger"] = max(pet["stats"].get("hunger", 0) - 5, 0)
-			pet["stats"]["energy"] = min(pet["stats"].get("energy", 0) + 10, 100)
 
 	saveLoadManager.clampValues(pd)
 	saveLoadManager.saveGame()

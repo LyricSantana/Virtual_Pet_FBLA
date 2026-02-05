@@ -69,10 +69,7 @@ func _ready() -> void:
 func _on_start_pressed() -> void:
 	if user_save_exists():
 		saveLoadManager.loadGame()
-		var cur_pet_id: String = str(saveLoadManager.playerData.get("current_pet", ""))
-		if cur_pet_id != "":
-			# first, tell PetManager to load the pet node
-			petManager.set_current_pet(cur_pet_id)
+
 		_change_to_game()
 		petManager.play_pet_animation(saveLoadManager.playerData["species"])
 	else:

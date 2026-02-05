@@ -75,7 +75,6 @@ func showPopup():
 # button handlers
 func feedPressed() -> void:
 	print("Feed button was pressed")
-	petManager._play_pet_animation(saveLoadManager.playerData["species"])
 
 func playPressed() -> void:
 	print("Play button was pressed")
