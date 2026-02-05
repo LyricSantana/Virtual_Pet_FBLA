@@ -75,8 +75,7 @@ func showPopup():
 # button handlers
 func feedPressed() -> void:
 	print("Feed button was pressed")
-	# temporarily max all stats
-	gameManager.allMax()
+	petManager._play_pet_animation(saveLoadManager.playerData["species"])
 
 func playPressed() -> void:
 	print("Play button was pressed")

@@ -74,6 +74,7 @@ func _on_start_pressed() -> void:
 			# first, tell PetManager to load the pet node
 			petManager.set_current_pet(cur_pet_id)
 		_change_to_game()
+		petManager.play_pet_animation(saveLoadManager.playerData["species"])
 	else:
 		_show_pet_select()
 
@@ -93,11 +94,11 @@ func _show_pet_select() -> void:
 		startPanel.visible = false
 
 func _on_cat_pressed() -> void:
-	chosen_species = "starter_cat"
+	chosen_species = "cat"
 	_highlight_choice(catButton, dogButton)
 
 func _on_dog_pressed() -> void:
-	chosen_species = "starter_dog"
+	chosen_species = "dog"
 	_highlight_choice(dogButton, catButton)
 
 func _highlight_choice(selected: TextureButton, other: TextureButton) -> void:
@@ -119,10 +120,11 @@ func _on_confirm_pressed() -> void:
 		if errorLabel:
 			errorLabel.text = "Please pick a species."
 		return
-
-	var pet_id: String = _create_new_save(chosen_species, pet_name)
+	_create_new_save(chosen_species, pet_name)
 	_change_to_game()
-	petManager.set_current_pet(pet_id) # ensures correct node + animation
+	if user_save_exists():
+		petManager.play_pet_animation(saveLoadManager.playerData["species"])
+
 
 func _on_back_pressed() -> void:
 	if startPanel:
@@ -130,25 +132,20 @@ func _on_back_pressed() -> void:
 	if petPanel:
 		petPanel.visible = false
 
-func _create_new_save(species_choice: String, pet_name: String) -> String:
-	var defaults := saveLoadManager.loadJSON("res://src/defaultSave.json")
-	var user_from_disk := saveLoadManager.loadJSON("user://player_save.json")
+func _create_new_save(species_choice: String, pet_name: String) -> void:
+	var defaults = saveLoadManager.loadJSON("res://src/defaultSave.json")
+	var user_from_disk = saveLoadManager.loadJSON("user://player_save.json")
 	saveLoadManager.playerData = saveLoadManager.mergeDicts(defaults, user_from_disk)
-
-	var pet_id: String = petManager.create_pet(species_choice, pet_name)
 
 	saveLoadManager.playerData["inventories"] = saveLoadManager.playerData.get("inventories", {})
 	saveLoadManager.playerData["inventories"]["pets"] = saveLoadManager.playerData["inventories"].get("pets", {})
-	saveLoadManager.playerData["inventories"]["pets"][pet_id] = petManager.get_pet(pet_id)
-
-	saveLoadManager.playerData["current_pet"] = pet_id
 	saveLoadManager.playerData["name"] = pet_name
 	saveLoadManager.playerData["day"] = 0
+	saveLoadManager.playerData["species"] = species_choice
 
 	saveLoadManager.clampValues(saveLoadManager.playerData)
 	saveLoadManager.saveGame()
 
-	return pet_id
 
 func _change_to_game() -> void:
 	if petPanel:

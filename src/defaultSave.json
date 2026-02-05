@@ -1,11 +1,10 @@
 {
-  "current_pet": "",
+  "species": "",
   "name": "",
   "money": 50,
   "totalSpent": 0,
   "day": 0,
   "level": 1,
-
   "stats": {
     "hunger": 100,
     "happiness": 100,
@@ -13,7 +12,6 @@
     "health": 100,
     "cleanliness": 100
   },
-
   "inventories": {
     "feed": {
       "apple": 1
@@ -21,7 +19,6 @@
     "play": {},
     "rest": {},
     "vet": {},
-    "clean": {},
-    "pets": {}
+    "clean": {}
   }
 }

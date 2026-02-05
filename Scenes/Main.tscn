@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://do3hcmafw16sx"]
 
 [ext_resource type="Script" uid="uid://d3gfoulr4hg3j" path="res://src/gameManager.gd" id="1_idj7w"]
-[ext_resource type="PackedScene" uid="uid://viivuuhvedwk" path="res://scenes/UI.tscn" id="2_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://viivuuhvedwk" path="res://Scenes/UI.tscn" id="2_0wfyh"]
 [ext_resource type="Script" uid="uid://s6m82enaiyhs" path="res://src/inventoryManager.gd" id="2_rgh2o"]
-[ext_resource type="PackedScene" uid="uid://c5i72a0j62dqq" path="res://scenes/pet.tscn" id="3_kln2b"]
-[ext_resource type="PackedScene" uid="uid://4uf1lnelxd5q" path="res://scenes/start.tscn" id="5_vcsgt"]
+[ext_resource type="PackedScene" uid="uid://c5i72a0j62dqq" path="res://Scenes/pet.tscn" id="3_kln2b"]
+[ext_resource type="PackedScene" uid="uid://4uf1lnelxd5q" path="res://Scenes/start.tscn" id="5_vcsgt"]
 
 [node name="Main" type="Node2D" unique_id=1409503824]
 
@@ -17,6 +17,7 @@ script = ExtResource("2_rgh2o")
 [node name="Control" parent="." unique_id=2027993166 instance=ExtResource("2_0wfyh")]
 
 [node name="pet" parent="." unique_id=1501936118 instance=ExtResource("3_kln2b")]
+z_index = 13
 script = null
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=988908203]

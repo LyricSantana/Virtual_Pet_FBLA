@@ -132,6 +132,7 @@ vertical_alignment = 1
 
 [node name="startPanel" type="Panel" parent="." unique_id=1333893442]
 process_mode = 3
+visible = false
 top_level = true
 z_index = -1
 layout_mode = 0
