@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://douhgak1g13ki" path="res://assets/sprites/pets/cat/catThinkingl2.png" id="5_njsil"]
 [ext_resource type="Texture2D" uid="uid://d4ll23p08f1w1" path="res://assets/sprites/pets/dog/dogThinking1.png" id="8_m4iea"]
 [ext_resource type="Texture2D" uid="uid://cjay6rl6iohgm" path="res://assets/sprites/pets/dog/dogThinking2.png" id="9_njsil"]
+[ext_resource type="Texture2D" uid="uid://bnjohx674r3uo" path="res://assets/sprites/thoughtIcons/dirtyIcon.png" id="10_njsil"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_njsil"]
 animations = [{
@@ -69,16 +70,21 @@ script = ExtResource("5_m4iea")
 position = Vector2(306, 177)
 scale = Vector2(2.5, 2.5)
 sprite_frames = SubResource("SpriteFrames_njsil")
+animation = &"dogThinking"
+frame_progress = 0.57440156
 
 [node name="thought" type="TextureRect" parent="petSprite" unique_id=1382351767]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 52.799995
-offset_top = -45.6
-offset_right = 40.799995
-offset_bottom = -53.6
+offset_left = 2.8000002
+offset_top = -23.2
+offset_right = -22.2
+offset_bottom = -55.2
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("10_njsil")
 expand_mode = 1
 stretch_mode = 4
