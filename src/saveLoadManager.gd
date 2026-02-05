@@ -10,11 +10,11 @@ var playerData: Dictionary = {}
 
 func _ready() -> void:
 	# load default save first
-	playerData = _load_json_safe(DEFAULT_SAVE_PATH)
+	playerData = loadJSON(DEFAULT_SAVE_PATH)
 
 
 # load JSON from a file safely, returns empty dictionary if fails
-func _load_json_safe(path: String) -> Dictionary:
+func loadJSON(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
 		return {}
 
@@ -40,8 +40,7 @@ func _load_json_safe(path: String) -> Dictionary:
 
 
 # public wrapper to load JSON
-func loadJSON(path: String) -> Dictionary:
-	return _load_json_safe(path)
+
 
 
 # save dictionary to JSON file

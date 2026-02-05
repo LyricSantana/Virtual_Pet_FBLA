@@ -1,22 +1,37 @@
 [gd_scene format=3 uid="uid://ehcpn5yax4p2"]
 
-[ext_resource type="Texture2D" uid="uid://dgv5cdm43yhc2" path="res://assets/sprites/pets/cat/catNormal1.png" id="1_3uw8y"]
-[ext_resource type="Texture2D" uid="uid://bqssdd6cvbq6s" path="res://assets/sprites/pets/cat/catNormal2.png" id="2_l01sk"]
+[ext_resource type="Texture2D" uid="uid://dgv5cdm43yhc2" path="res://assets/sprites/pets/cat/catNormal1.png" id="2_3uw8y"]
 [ext_resource type="Texture2D" uid="uid://hl3x7oi4ch1y" path="res://assets/sprites/pets/dog/dogNormal1.png" id="3_2tuav"]
+[ext_resource type="Texture2D" uid="uid://bqssdd6cvbq6s" path="res://assets/sprites/pets/cat/catNormal2.png" id="3_l01sk"]
+[ext_resource type="Texture2D" uid="uid://wilxgy4ick3d" path="res://assets/sprites/pets/cat/catThinking1.png" id="4_m4iea"]
 [ext_resource type="Texture2D" uid="uid://cf6j23hioq1gr" path="res://assets/sprites/pets/dog/dogNormal2.png" id="4_wsn7m"]
 [ext_resource type="Script" uid="uid://dmi61yuagu622" path="res://src/petManager.gd" id="5_m4iea"]
+[ext_resource type="Texture2D" uid="uid://douhgak1g13ki" path="res://assets/sprites/pets/cat/catThinkingl2.png" id="5_njsil"]
+[ext_resource type="Texture2D" uid="uid://d4ll23p08f1w1" path="res://assets/sprites/pets/dog/dogThinking1.png" id="8_m4iea"]
+[ext_resource type="Texture2D" uid="uid://cjay6rl6iohgm" path="res://assets/sprites/pets/dog/dogThinking2.png" id="9_njsil"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_njsil"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_3uw8y")
+"texture": ExtResource("2_3uw8y")
 }, {
 "duration": 1.0,
-"texture": ExtResource("2_l01sk")
+"texture": ExtResource("3_l01sk")
 }],
 "loop": true,
 "name": &"catNormal",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_m4iea")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_njsil")
+}],
+"loop": true,
+"name": &"catThinking",
 "speed": 1.0
 }, {
 "frames": [],
@@ -34,6 +49,17 @@ animations = [{
 "loop": true,
 "name": &"dogNormal",
 "speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_m4iea")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_njsil")
+}],
+"loop": true,
+"name": &"dogThinking",
+"speed": 1.0
 }]
 
 [node name="petManager" type="Node2D" unique_id=766304925]
@@ -41,5 +67,18 @@ script = ExtResource("5_m4iea")
 
 [node name="petSprite" type="AnimatedSprite2D" parent="." unique_id=2136158165]
 position = Vector2(306, 177)
-scale = Vector2(1.8125, 1.8125)
+scale = Vector2(2.5, 2.5)
 sprite_frames = SubResource("SpriteFrames_njsil")
+
+[node name="thought" type="TextureRect" parent="petSprite" unique_id=1382351767]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 52.799995
+offset_top = -45.6
+offset_right = 40.799995
+offset_bottom = -53.6
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 4

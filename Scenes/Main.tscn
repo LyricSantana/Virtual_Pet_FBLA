@@ -20,5 +20,5 @@ script = ExtResource("2_rgh2o")
 
 [node name="start" parent="CanvasLayer" unique_id=134240700 instance=ExtResource("5_vcsgt")]
 
-[node name="Node2D" parent="." unique_id=766304925 instance=ExtResource("5_pbw6q")]
+[node name="pet" parent="." unique_id=766304925 instance=ExtResource("5_pbw6q")]
 script = null
