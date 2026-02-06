@@ -1,16 +1,10 @@
-# start.gd — cleaned and simplified
-# Lean, readable, and documented like a competent HS dev who actually ships things.
+## Start screen controller
+# Manages the start menu, pet creation, and save setup.
 
 extends Control
 
-# -------------------------
-# Local state
-# -------------------------
-var chosen_species: String = ""      # "cat" or "dog" or empty if none selected
+var chosenSpecies: String = ""      # "cat" or "dog" or empty if none selected
 
-# -------------------------
-# Node references (onready for scene binding)
-# -------------------------
 @onready var startPanel = $startPanel
 @onready var petPanel = $petSelectPanel
 @onready var startButton = $startPanel/VBoxContainer/startButton
@@ -25,38 +19,18 @@ var chosen_species: String = ""      # "cat" or "dog" or empty if none selected
 @onready var settingsBackButton = $CanvasLayer/settingsPanel/settingsPopup/VBoxContainer/backButton
 @onready var deleteButton = $CanvasLayer/settingsPanel/settingsPopup/VBoxContainer/deleteButton
 
-# references to autoloads or scene nodes (resolved at runtime)
-var pm               # petManager (prefer autoload)
-var ui_node
-var start_layer
+var petManagerRef               # petManager autoload
+var uiNode
+var startLayer
 
-# -------------------------
-# Minimal safety check helper
-# -------------------------
-func _ensure_manager(name: String) -> bool:
-	if typeof(get_node("/root").has_node) == TYPE_NIL:
-		# very defensive fallback (shouldn't happen)
-		return false
-	return true
-
-
-# -------------------------
-# Startup
-# -------------------------
 func _ready() -> void:
-	# Cache some common nodes
-	start_layer = get_parent()
-	ui_node = get_tree().get_root().get_node_or_null("Main/UI")
+	# Cache nodes and autoloads.
+	startLayer = get_parent()
+	uiNode = get_tree().get_root().get_node("Main/UI")
+	petManagerRef = petManager
 
-	# Prefer autoload petManager; if not registered, try scene path
-	if typeof(petManager) != TYPE_NIL:
-		pm = petManager
-	else:
-		pm = get_tree().get_root().get_node_or_null("Main/pet")
-
-	# Hide in-game UI while on start
-	if ui_node:
-		ui_node.visible = false
+	# Hide in-game UI while on start.
+	uiNode.visible = false
 
 	# Start screen default visibility
 	startPanel.visible = true
@@ -64,169 +38,163 @@ func _ready() -> void:
 	settingsPanel.visible = false
 
 	# Connect important buttons (assume nodes exist in scene structure)
-	startButton.pressed.connect(_on_start_pressed)
-	settingsButton.pressed.connect(_on_settings_pressed)
-	catButton.pressed.connect(func() -> void: _select_species("cat"))
-	dogButton.pressed.connect(func() -> void: _select_species("dog"))
-	confirmButton.pressed.connect(_on_confirm_pressed)
-	backButton.pressed.connect(_on_back_pressed)
-	settingsBackButton.pressed.connect(_on_settings_back_pressed)
-	deleteButton.pressed.connect(_on_delete_pressed)
+	startButton.pressed.connect(_onStartPressed)
+	settingsButton.pressed.connect(_onSettingsPressed)
+	catButton.pressed.connect(func() -> void: _selectSpecies("cat"))
+	dogButton.pressed.connect(func() -> void: _selectSpecies("dog"))
+	confirmButton.pressed.connect(_onConfirmPressed)
+	backButton.pressed.connect(_onBackPressed)
+	settingsBackButton.pressed.connect(_onSettingsBackPressed)
+	deleteButton.pressed.connect(_onDeletePressed)
 
 	# Make sure the species buttons look active by default
-	_set_species_buttons_bright()
+	_setSpeciesButtonsBright()
 
 	# Clear any stale error text
 	errorLabel.text = ""
 
 
-# -------------------------
-# Start / settings
-# -------------------------
-func _on_start_pressed() -> void:
+
+func _onStartPressed() -> void:
+	# Start game or show pet creation if no save.
 	# If a user save exists, load and go straight into the game.
 	# Otherwise show the pet creation screen.
 	if FileAccess.file_exists("user://player_save.json"):
-		if typeof(saveLoadManager) != TYPE_NIL and saveLoadManager.has_method("loadGame"):
-			saveLoadManager.loadGame()
-		_change_to_game()
-		if pm and pm.has_method("set_player_data"):
-			pm.set_player_data(saveLoadManager.playerData)
+		saveLoadManager.loadGame()
+		_changeToGame()
+		petManagerRef.setPlayerData(saveLoadManager.playerData)
 	else:
-		_show_pet_select()
+		_showPetSelect()
 
 
-func _on_settings_pressed() -> void:
+func _onSettingsPressed() -> void:
+	# Open settings panel.
 	settingsPanel.visible = true
 
 
-# -------------------------
-# Pet creation UI
-# -------------------------
-func _show_pet_select() -> void:
-	chosen_species = ""
+
+func _showPetSelect() -> void:
+	# Open pet selection UI and reset inputs.
+	chosenSpecies = ""
 	nameInput.text = ""
 	errorLabel.text = ""
 	petPanel.visible = true
 	startPanel.visible = false
 	# ensure both buttons render bright on open (deferred is safest)
-	call_deferred("_set_species_buttons_bright")
+	call_deferred("_setSpeciesButtonsBright")
 
 
-func _select_species(spec: String) -> void:
-	chosen_species = spec
+func _selectSpecies(spec: String) -> void:
+	# Pick a species and update button visuals.
+	chosenSpecies = spec
 	# selected stays bright, other dims slightly
-	_apply_select_button(catButton, spec == "cat")
-	_apply_select_button(dogButton, spec == "dog")
+	_applySelectButton(catButton, spec == "cat")
+	_applySelectButton(dogButton, spec == "dog")
 
 
-func _apply_select_button(btn: Control, selected: bool) -> void:
+func _applySelectButton(btn: Control, selected: bool) -> void:
+	# Simple visual feedback for selection.
 	# simple visual feedback: selected = white, else dimmed
 	btn.modulate = Color(1, 1, 1, 1) if selected else Color(0.6, 0.6, 0.6, 1)
 
 
-func _on_confirm_pressed() -> void:
-	var pet_name = nameInput.text.strip_edges()
-	if pet_name == "":
-		errorLabel.text = "Please enter a name."
+func _onConfirmPressed() -> void:
+	# Confirm pet choice and create save.
+	var petName = nameInput.text.strip_edges()
+	var nameError = _validatePetName(petName)
+	if nameError != "":
+		errorLabel.text = nameError
 		return
-	if chosen_species == "":
+	if chosenSpecies == "":
 		errorLabel.text = "Please pick a species."
 		return
 
-	_create_new_save(chosen_species, pet_name)
-	_change_to_game()
-	if pm and pm.has_method("set_player_data"):
-		pm.set_player_data(saveLoadManager.playerData)
+	_createNewSave(chosenSpecies, petName)
+	_changeToGame()
+	petManagerRef.setPlayerData(saveLoadManager.playerData)
 
 
-func _on_back_pressed() -> void:
+func _onBackPressed() -> void:
+	# Back out of pet creation.
 	startPanel.visible = true
 	petPanel.visible = false
 
 
-# -------------------------
-# Save / creation logic (compact)
-# -------------------------
-func _create_new_save(species_choice: String, pet_name: String) -> void:
+
+func _createNewSave(speciesChoice: String, petName: String) -> void:
+	# Create a new save using defaults, then set the pet info.
 	# SaveLoadManager is expected to exist as an autoload.
 	# We keep this function short: ask saveLoadManager to load existing save (it already knows defaults),
 	# then overwrite the fields we need and save.
-	if typeof(saveLoadManager) == TYPE_NIL:
-		push_error("saveLoadManager autoload missing — cannot create new save.")
-		return
-
-	# Ensure defaults are loaded and any user save merged
-	# (loadGame is idempotent and will create a new user save from defaults if none exists)
-	saveLoadManager.loadGame()
+	# Reset to defaults so old stats do not carry over into a new save
+	saveLoadManager.resetData()
 
 	# Set starting values for the new pet
 	var pd = saveLoadManager.playerData
 	pd["inventories"] = pd.get("inventories", {})
 	pd["inventories"]["pets"] = pd["inventories"].get("pets", {})
-	pd["name"] = pet_name
+	pd["name"] = petName
 	pd["day"] = 0
-	pd["species"] = species_choice
+	pd["species"] = speciesChoice
 
 	# Sanitize and persist
 	saveLoadManager.clampValues(pd)
 	saveLoadManager.saveGame()
 
 
-# -------------------------
-# Scene transition
-# -------------------------
-func _change_to_game() -> void:
+func _changeToGame() -> void:
+	# Move from start screen to game UI.
 	# hide start UI and show main UI; resume game timer
-	if start_layer:
-		start_layer.visible = false
+	startLayer.visible = false
 	startPanel.visible = false
 	petPanel.visible = false
-	if ui_node:
-		ui_node.visible = true
-	if typeof(gameManager) != TYPE_NIL:
-		gameManager.resume_game()
+	uiNode.visible = true
+	gameManager.resumeGame()
 
 
-# -------------------------
-# Small helpers
-# -------------------------
-func _user_save_exists() -> bool:
+func _userSaveExists() -> bool:
+	# Return true if a user save exists.
 	return FileAccess.file_exists("user://player_save.json")
 
 
-func _on_settings_back_pressed() -> void:
+func _onSettingsBackPressed() -> void:
+	# Close settings panel.
 	settingsPanel.visible = false
 
 
-func _on_delete_pressed() -> void:
-	# remove user save if present
-	if FileAccess.file_exists("user://player_save.json"):
-		var dir = DirAccess.open("user://")
-		if dir:
-			dir.remove("player_save.json")
+func _onDeletePressed() -> void:
+	# Delete the user save file.
+	saveLoadManager.deleteUserFile("player_save.json")
 
 
-# Called by in-game UI to return to start screen
 func onStartScreenPressed() -> void:
-	if start_layer:
-		start_layer.visible = true
-	if ui_node:
-		ui_node.visible = false
+	# Return to the start screen from in-game UI.
+	startLayer.visible = true
+	uiNode.visible = false
 	startPanel.visible = true
 	petPanel.visible = false
-	if typeof(gameManager) != TYPE_NIL:
-		gameManager.pause_game()
+	gameManager.pauseGame()
 
 
-# -------------------------
-# Visual helpers
-# -------------------------
-func _set_species_buttons_bright() -> void:
+func _setSpeciesButtonsBright() -> void:
+	# Brighten both species buttons.
 	catButton.modulate = Color(1, 1, 1, 1)
 	dogButton.modulate = Color(1, 1, 1, 1)
 
 
-func _reset_species_buttons() -> void:
+func _resetSpeciesButtons() -> void:
+	# Dim both species buttons.
 	catButton.modulate = Color(0.6, 0.6, 0.6, 1)
 	dogButton.modulate = Color(0.6, 0.6, 0.6, 1)
+
+
+func _validatePetName(petName: String) -> String:
+	# Enforce simple name rules for input validation.
+	var trimmed = petName.strip_edges()
+	if trimmed.length() < 2 or trimmed.length() > 12:
+		return "Name must be 2-12 characters."
+	var regex = RegEx.new()
+	regex.compile("^[A-Za-z ]+$")
+	if regex.search(trimmed) == null:
+		return "Use letters and spaces only."
+	return ""

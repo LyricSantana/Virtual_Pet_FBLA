@@ -1,27 +1,36 @@
 {
-	"species": "",
-	"name": "",
-	"money": 50,
-	"totalSpent": 0,
-	"day": 0,
-	"level": 1,
-	"stats": {
-		"hunger": 100,
-		"happiness": 100,
-		"energy": 100,
-		"health": 100,
-		"cleanliness": 100
-	},
-	"inventories": {
-		"feed": {
-			"apple": {
-				"count": 1,
-				"uses": 5
-			}
-		},
-		"play": {},
-		"rest": {},
-		"vet": {},
-		"clean": {}
-	}
+    "species": "",
+    "name": "",
+    "money": 50,
+    "totalSpent": 0,
+    "careExpenses": 0,
+    "weeklyLimit": 120,
+    "savingsGoal": 100,
+    "savingsSaved": 0,
+    "expenses": [],
+    "chores": {
+        "lastDay": -1,
+        "done": []
+    },
+    "day": 0,
+    "level": 1,
+    "stats": {
+        "hunger": 100,
+        "happiness": 100,
+        "energy": 100,
+        "health": 100,
+        "cleanliness": 100
+    },
+    "inventories": {
+        "feed": {
+            "petFood": {
+                "count": 1,
+                "uses": 1
+            }
+        },
+        "play": {},
+        "rest": {},
+        "vet": {},
+        "clean": {}
+    }
 }

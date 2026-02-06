@@ -1,34 +1,17 @@
-# petManager.gd — refactored
-# This node handles your pet sprite, animations, and thought icons.
-# It updates visuals based on player stats (hunger, energy, happiness, etc.)
+## Pet manager
+# Controls pet animations and thought icons based on player stats.
 
 extends Node2D
 
-# -------------------------
-# Node references
-# -------------------------
 @onready var petNode: AnimatedSprite2D = $petSprite          # main pet sprite
 @onready var thoughtIcon: TextureRect = $thought             # icon that shows pet's thoughts
 
-# -------------------------
-# Preloaded thought icons
-# -------------------------
 var icons: Dictionary[String, Texture2D] = {}  # dictionary to store icons
 
-# -------------------------
-# Player data reference
-# -------------------------
 var playerData: Dictionary = {}  # this will be updated by GameManager
 
-# -------------------------
-# Ready: initialize icons and setup
-# -------------------------
 func _ready() -> void:
-	# check sprite frames exist
-	if petNode.sprite_frames == null:
-		push_error("SpriteFrames missing! Scene broken?")
-		return
-
+	# Set up thought icons and animation layer.
 	print("Available animations:", petNode.sprite_frames.get_animation_names())
 
 	# make thought icon always render above
@@ -36,7 +19,7 @@ func _ready() -> void:
 	thoughtIcon.z_index = 50
 	thoughtIcon.process_mode = Node.PROCESS_MODE_ALWAYS
 
-	# preload all thought icons
+	# Preload all thought icons.
 	icons = {
 		"hungry": load("res://assets/sprites/thoughtIcons/hungryIcon.png"),
 		"sad":    load("res://assets/sprites/thoughtIcons/sadIcon.png"),
@@ -45,65 +28,54 @@ func _ready() -> void:
 		"dirty":  load("res://assets/sprites/thoughtIcons/dirtyIcon.png")
 	}
 
-# -------------------------
-# Update player data
-# Called whenever stats change
-# -------------------------
-func set_player_data(data: Dictionary) -> void:
-	if data == null or data.is_empty():
-		push_error("Invalid player data received")
-		return
 
+# Update player data and refresh visuals.
+func setPlayerData(data: Dictionary) -> void:
 	playerData = data
-	update_pet_animation()  # refresh visuals
+	updatePetAnimation()  # refresh visuals
 
-# -------------------------
-# Update pet animation based on stats
-# -------------------------
-func update_pet_animation() -> void:
-	if playerData.is_empty():
-		return
 
+# Update pet animation based on stats.
+func updatePetAnimation() -> void:
 	var stats = playerData.get("stats", {})
 	var species: String = playerData.get("species", "dog")  # default to dog
 
-	var anim_name = species + "Normal"
-	var thought_key: String = ""  # which thought icon to show
+	var animName = species + "Normal"
+	var thoughtKey: String = ""  # which thought icon to show
 
-	# -------------------------
-	# Priority-based thoughts (highest to lowest)
-	# -------------------------
+	# Priority-based thoughts
 	if stats.get("health", 100) <= 50:
-		thought_key = "sick"
+		thoughtKey = "sick"
 	elif stats.get("hunger", 100) <= 50:
-		thought_key = "hungry"
+		thoughtKey = "hungry"
 	elif stats.get("happiness", 100) <= 40:
-		thought_key = "sad"
+		thoughtKey = "sad"
 	elif stats.get("energy", 100) <= 30:
-		thought_key = "tired"
+		thoughtKey = "tired"
 	elif stats.get("cleanliness", 100) <= 50:
-		thought_key = "dirty"
+		thoughtKey = "dirty"
 
-	# -------------------------
 	# Set animation and thought icon
-	# -------------------------
-	if thought_key != "":
-		anim_name = species + "Thinking"
-		thoughtIcon.texture = icons[thought_key]
+	if thoughtKey != "":
+		animName = species + "Thinking"
+		thoughtIcon.texture = icons[thoughtKey]
 		thoughtIcon.visible = true
 	else:
 		thoughtIcon.texture = null
 		thoughtIcon.visible = false
 
-	# play animation safely
-	if petNode.sprite_frames.has_animation(anim_name):
-		petNode.play(anim_name)
+	# Play animation safely
+	if petNode.sprite_frames.has_animation(animName):
+		petNode.play(animName)
+	elif petNode.sprite_frames.has_animation(species + "Idle"):  # fallback to idle
+		petNode.play(species + "Idle")
+	elif petNode.sprite_frames.get_animation_names().size() > 0:
+		petNode.play(petNode.sprite_frames.get_animation_names()[0])  # any animation available
 	else:
-		petNode.play(species + "Normal")  # fallback
+		# no animations at all, do nothing
+		pass
 
-# -------------------------
-# Utility to manually show/hide thought icon
-# -------------------------
-func set_thought_visible(isVisible: bool) -> void:
-	if thoughtIcon:
-		thoughtIcon.visible = isVisible
+
+# Show or hide the thought icon.
+func setThoughtVisible(input: bool):
+	thoughtIcon.visible = input
