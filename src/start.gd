@@ -1,5 +1,6 @@
 ## Start screen controller
-# Manages the start menu, pet creation, and save setup.
+# This file runs the start menu and pet setup flow.
+# It handles new saves and moving into the main game.
 
 extends Control
 
@@ -18,6 +19,7 @@ var chosenSpecies: String = ""      # "cat" or "dog" or empty if none selected
 @onready var settingsPanel = $CanvasLayer/settingsPanel
 @onready var settingsBackButton = $CanvasLayer/settingsPanel/settingsPopup/VBoxContainer/backButton
 @onready var deleteButton = $CanvasLayer/settingsPanel/settingsPopup/VBoxContainer/deleteButton
+@onready var quitButton = $CanvasLayer/settingsPanel/settingsPopup/VBoxContainer/quitButton
 
 var petManagerRef               # petManager autoload
 var uiNode
@@ -46,6 +48,17 @@ func _ready() -> void:
 	backButton.pressed.connect(_onBackPressed)
 	settingsBackButton.pressed.connect(_onSettingsBackPressed)
 	deleteButton.pressed.connect(_onDeletePressed)
+	quitButton.pressed.connect(_onQuitPressed)
+
+	_wireButtonLabelPress(startButton)
+	_wireButtonLabelPress(settingsButton)
+	_wireButtonLabelPress(catButton)
+	_wireButtonLabelPress(dogButton)
+	_wireButtonLabelPress(confirmButton)
+	_wireButtonLabelPress(backButton)
+	_wireButtonLabelPress(settingsBackButton)
+	_wireButtonLabelPress(deleteButton)
+	_wireButtonLabelPress(quitButton)
 
 	# Make sure the species buttons look active by default
 	_setSpeciesButtonsBright()
@@ -54,13 +67,48 @@ func _ready() -> void:
 	errorLabel.text = ""
 
 
+func _wireButtonLabelPress(btn: TextureButton) -> void:
+	# Keep text aligned with the pressed button offset.
+	var label = _findButtonLabel(btn)
+	btn.button_down.connect(func() -> void: _offsetButtonLabel(btn, true))
+	btn.button_up.connect(func() -> void: _offsetButtonLabel(btn, false))
+	btn.mouse_exited.connect(func() -> void: _offsetButtonLabel(btn, false))
+
+
+func _findButtonLabel(btn: TextureButton) -> Label:
+	# Find the first label inside a button.
+	for child in btn.get_children():
+		if child is Label:
+			return child
+	return null
+
+
+func _offsetButtonLabel(btn: TextureButton, pressed: bool) -> void:
+	# Nudge the label to match the button press animation.
+	var label = _findButtonLabel(btn)
+	if pressed or not label.has_meta("base_offsets"):
+		label.set_meta("base_offsets", {
+			"left": label.offset_left,
+			"top": label.offset_top,
+			"right": label.offset_right,
+			"bottom": label.offset_bottom
+		})
+	var baseOffsets = label.get_meta("base_offsets")
+	var basePressOffset = 2 if btn == startButton or btn == settingsButton else 4
+	var pressOffset = basePressOffset if pressed else 0
+	label.offset_left = float(baseOffsets["left"])
+	label.offset_right = float(baseOffsets["right"])
+	label.offset_top = float(baseOffsets["top"]) + pressOffset
+	label.offset_bottom = float(baseOffsets["bottom"]) + pressOffset
+
+
 
 func _onStartPressed() -> void:
 	# Start game or show pet creation if no save.
 	# If a user save exists, load and go straight into the game.
 	# Otherwise show the pet creation screen.
-	if FileAccess.file_exists("user://player_save.json"):
-		saveLoadManager.loadGame()
+	var loaded = saveLoadManager.loadGame()
+	if loaded:
 		_changeToGame()
 		petManagerRef.setPlayerData(saveLoadManager.playerData)
 	else:
@@ -165,6 +213,11 @@ func _onSettingsBackPressed() -> void:
 func _onDeletePressed() -> void:
 	# Delete the user save file.
 	saveLoadManager.deleteUserFile("player_save.json")
+
+
+func _onQuitPressed() -> void:
+	# Quit the game from the settings menu.
+	get_tree().quit()
 
 
 func onStartScreenPressed() -> void:

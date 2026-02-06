@@ -1,5 +1,6 @@
 ## Save/load manager
-# Loads defaults, merges user saves, clamps stats, and writes JSON to disk.
+# This file loads and saves player data as JSON.
+# It also merges defaults and clamps stats so saves stay clean.
 
 extends Node
 
@@ -14,15 +15,10 @@ func _ready() -> void:
 	playerData = _safeLoadJson(defaultSavePath)
 
 
-# Low-level JSON loader (safe)
+# Low-level JSON loader (safe).
 # Returns a Dictionary or empty Dictionary on failure.
-# Works with various Godot JSON return shapes.
 func _safeLoadJson(path: String) -> Dictionary:
 	# Load a JSON file and return a dictionary (or empty on failure).
-	# If file doesn't exist (common for user://), return empty dict
-	if not FileAccess.file_exists(path):
-		return {}
-
 	var file = FileAccess.open(path, FileAccess.READ)
 	if not file:
 		push_warning("Could not open JSON at: %s" % path)

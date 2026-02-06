@@ -1,10 +1,11 @@
 ## Inventory manager
-# Handles all inventory add/remove/get logic and keeps save data in sync.
+# This file keeps track of items the player owns.
+# It reads and writes the save data so other scripts can just call helpers.
 
 extends Node
 
 
-# Get or create the main inventories dictionary.
+# Get or create the main inventories dictionary in the save data.
 func _getInventories() -> Dictionary:
 	saveLoadManager.playerData["inventories"] = saveLoadManager.playerData.get("inventories", {})
 	return saveLoadManager.playerData["inventories"]

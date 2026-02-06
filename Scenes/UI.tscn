@@ -6,37 +6,31 @@
 [ext_resource type="Texture2D" uid="uid://ca523gvvgbu2t" path="res://assets/sprites/buttons/editButtonNormal.png" id="3_7lcob"]
 [ext_resource type="Texture2D" uid="uid://c0isc30iku41b" path="res://assets/sprites/progressBar.png" id="3_75u2n"]
 [ext_resource type="FontFile" uid="uid://d38hqs8frrw70" path="res://assets/fonts/pixelFont.ttf" id="4_ua6yw"]
-[ext_resource type="Texture2D" uid="uid://dfruyopj0vlna" path="res://assets/sprites/buttons/buttonRedNormal.png" id="5_3wlde"]
-[ext_resource type="Texture2D" uid="uid://c3xu1eadgnpb7" path="res://assets/sprites/buttons/editButtonPressed.png" id="5_5r2ug"]
-[ext_resource type="Texture2D" uid="uid://cuq8kh8ur3aws" path="res://assets/sprites/buttons/editButtonHover.png" id="5_cpqi3"]
-[ext_resource type="Texture2D" uid="uid://dal3tqjmvxx6t" path="res://assets/sprites/buttons/buttonRedPressed.png" id="6_24e4x"]
-[ext_resource type="Texture2D" uid="uid://c8xsknc2507ca" path="res://assets/sprites/buttons/buttonRedHover.png" id="6_xpksx"]
-[ext_resource type="Texture2D" uid="uid://c7fgdjhsguf44" path="res://assets/sprites/buttons/buttonGreenNormal.png" id="8_w7enk"]
-[ext_resource type="Texture2D" uid="uid://cgni784a75p3h" path="res://assets/sprites/buttons/buttonGreenPressed.png" id="9_aputy"]
-[ext_resource type="Texture2D" uid="uid://b3cej6dwooxuk" path="res://assets/sprites/buttons/buttonGreenHover.png" id="10_7paak"]
-[ext_resource type="Texture2D" uid="uid://q8j75tw55nsc" path="res://assets/sprites/buttons/buttonBlueNormal.png" id="11_5sqrc"]
-[ext_resource type="Texture2D" uid="uid://bdu17ffva5xdo" path="res://assets/sprites/buttons/buttonBluePressed.png" id="12_ilk7v"]
-[ext_resource type="Texture2D" uid="uid://djd8o1emsw0g" path="res://assets/sprites/buttons/buttonBlueHover.png" id="13_flkkw"]
-[ext_resource type="Texture2D" uid="uid://c2dk3ojx7owfg" path="res://assets/sprites/buttons/buttonYellowNormal.png" id="14_hu0pd"]
-[ext_resource type="Texture2D" uid="uid://s62uj5skwtcd" path="res://assets/sprites/buttons/buttonYellowPressed.png" id="15_o5ifv"]
-[ext_resource type="Texture2D" uid="uid://fna5b1d4r1sc" path="res://assets/sprites/buttons/buttonYellowHover.png" id="16_s2vcx"]
-[ext_resource type="Texture2D" uid="uid://c0wpu2mpcrw5m" path="res://assets/sprites/buttons/buttonPurpleNormal.png" id="17_38m54"]
-[ext_resource type="Texture2D" uid="uid://crdgkjtusn5ry" path="res://assets/sprites/buttons/buttonPurplePressed.png" id="18_h3f0y"]
-[ext_resource type="Texture2D" uid="uid://6qet031atua0" path="res://assets/sprites/buttons/buttonPurpleHover.png" id="19_yamhi"]
-[ext_resource type="Texture2D" uid="uid://c85wsfnembxhi" path="res://assets/sprites/buttons/buttonGreyNormal.png" id="20_38m54"]
-[ext_resource type="Texture2D" uid="uid://blukix28a5d04" path="res://assets/sprites/buttons/buttonGreyPressed.png" id="21_h3f0y"]
-[ext_resource type="Texture2D" uid="uid://c2p4u0gt0ma8j" path="res://assets/sprites/buttons/buttonGreyHover.png" id="22_yamhi"]
-[ext_resource type="Texture2D" uid="uid://bk03e78fb4poe" path="res://assets/sprites/buttons/buttonBrownNormal.png" id="23_mudns"]
-[ext_resource type="Texture2D" uid="uid://dlufkwg1gxf4h" path="res://assets/sprites/buttons/buttonBrownPressed.png" id="24_knc77"]
-[ext_resource type="Texture2D" uid="uid://wihbfq0j8sno" path="res://assets/sprites/buttons/buttonBrownHover.png" id="25_fm1lg"]
-[ext_resource type="Texture2D" uid="uid://c3puc8v7byvq7" path="res://assets/sprites/backgrounds/placeHolder.png" id="27_fm1lg"]
-[ext_resource type="Texture2D" uid="uid://b3p0g1q27i5q2" path="res://assets/sprites/buttons/backButtonNormal.png" id="29_hgu3j"]
-[ext_resource type="Texture2D" uid="uid://buslewa8nyb51" path="res://assets/sprites/buttons/backButtonPressed.png" id="30_bqcyk"]
-[ext_resource type="Texture2D" uid="uid://dsba6w785wx01" path="res://assets/sprites/buttons/backButtonHover.png" id="31_7lcob"]
+[ext_resource type="Texture2D" uid="uid://c3xu1eadgnpb7" path="res://assets/sprites/buttons/editButtonPressed.png" id="4_wijgc"]
+[ext_resource type="Texture2D" uid="uid://6ap6jx5odhtl" path="res://assets/sprites/buttons/redNormal.png" id="5_3wlde"]
+[ext_resource type="Texture2D" uid="uid://cuq8kh8ur3aws" path="res://assets/sprites/buttons/editButtonHover.png" id="5_yhvps"]
+[ext_resource type="Texture2D" uid="uid://boaf02htj684l" path="res://assets/sprites/buttons/redPressed.png" id="6_24e4x"]
+[ext_resource type="Texture2D" uid="uid://bpm5iuel7vlnn" path="res://assets/sprites/buttons/redHover.png" id="6_xpksx"]
+[ext_resource type="Texture2D" uid="uid://blr6g4bgng32c" path="res://assets/sprites/buttons/greenNormal.png" id="8_w7enk"]
+[ext_resource type="Texture2D" uid="uid://trbakrd6lyo2" path="res://assets/sprites/buttons/greenPressed.png" id="9_aputy"]
+[ext_resource type="Texture2D" uid="uid://c7n6i06vyeftx" path="res://assets/sprites/buttons/greenHover.png" id="10_7paak"]
+[ext_resource type="Texture2D" uid="uid://d3g5tmmjwo65e" path="res://assets/sprites/buttons/blueNormal.png" id="11_5sqrc"]
+[ext_resource type="Texture2D" uid="uid://wudgblco12od" path="res://assets/sprites/buttons/bluePressed.png" id="12_ilk7v"]
+[ext_resource type="Texture2D" uid="uid://b31h6mq4ljaia" path="res://assets/sprites/buttons/blueHover.png" id="13_flkkw"]
+[ext_resource type="Texture2D" uid="uid://cxu46fjh8uwoh" path="res://assets/sprites/buttons/yellowNormal.png" id="14_hu0pd"]
+[ext_resource type="Texture2D" uid="uid://colvfa81cay6k" path="res://assets/sprites/buttons/yellowPressed.png" id="15_o5ifv"]
+[ext_resource type="Texture2D" uid="uid://btngw4n4tuyuo" path="res://assets/sprites/buttons/yellowHover.png" id="16_s2vcx"]
+[ext_resource type="Texture2D" uid="uid://cunrrep3fk2v4" path="res://assets/sprites/buttons/purpleNormal.png" id="17_38m54"]
+[ext_resource type="Texture2D" uid="uid://bys2yb62h2gb5" path="res://assets/sprites/buttons/purplePressed.png" id="18_h3f0y"]
+[ext_resource type="Texture2D" uid="uid://bfchtqqfkgo2j" path="res://assets/sprites/buttons/purpleHover.png" id="19_yamhi"]
+[ext_resource type="Texture2D" uid="uid://cdp2dd0n2eh4p" path="res://assets/sprites/buttons/greyNormal.png" id="20_38m54"]
+[ext_resource type="Texture2D" uid="uid://dduc516tf05iu" path="res://assets/sprites/buttons/greyPressed.png" id="21_h3f0y"]
+[ext_resource type="Texture2D" uid="uid://b68imfxynw17o" path="res://assets/sprites/buttons/greyHover.png" id="22_yamhi"]
+[ext_resource type="Texture2D" uid="uid://d27kejrricohu" path="res://assets/backgrounds/day.png" id="30_qvwwb"]
 [ext_resource type="Texture2D" uid="uid://dfpb2uwfvbag3" path="res://assets/sprites/window.png" id="31_q6a8d"]
-[ext_resource type="Texture2D" uid="uid://bn8nnqq8r6l53" path="res://assets/sprites/buttons/enterButtonNormal.png" id="35_qnnsw"]
-[ext_resource type="Texture2D" uid="uid://dyoog0cvnly6g" path="res://assets/sprites/buttons/enterButtonPressed.png" id="36_xg5gc"]
-[ext_resource type="Texture2D" uid="uid://ckxsw7aedakge" path="res://assets/sprites/buttons/enterButtonHover.png" id="37_tlqq8"]
+[ext_resource type="Texture2D" uid="uid://x6bbgsp2vva5" path="res://assets/sprites/buttons/brownNormal.png" id="35_qnnsw"]
+[ext_resource type="Texture2D" uid="uid://c4knnt75jgwc1" path="res://assets/sprites/buttons/brownPressed.png" id="36_xg5gc"]
+[ext_resource type="Texture2D" uid="uid://bua5nq15emjap" path="res://assets/sprites/buttons/brownHover.png" id="37_tlqq8"]
 [ext_resource type="Texture2D" uid="uid://bqt80feboici2" path="res://assets/sprites/shopWindow.png" id="38_q6a8d"]
 
 [sub_resource type="Theme" id="Theme_3wlde"]
@@ -89,6 +83,12 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("4_ua6yw")
 text = "Day: 0"
 
+[node name="clockLabel" type="Label" parent="labels" unique_id=2063128555]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 10
+text = "Time: 00:00"
+
 [node name="nameBox" type="HBoxContainer" parent="labels" unique_id=1322616518]
 layout_mode = 2
 
@@ -100,11 +100,11 @@ text = "Name: "
 [node name="changeNameButton" type="TextureButton" parent="labels/nameBox" unique_id=30408023]
 custom_minimum_size = Vector2(12, 12)
 layout_mode = 2
-size_flags_horizontal = 6
+size_flags_horizontal = 2
 size_flags_vertical = 0
 texture_normal = ExtResource("3_7lcob")
-texture_pressed = ExtResource("5_5r2ug")
-texture_hover = ExtResource("5_cpqi3")
+texture_pressed = ExtResource("4_wijgc")
+texture_hover = ExtResource("5_yhvps")
 stretch_mode = 4
 
 [node name="quickButtons" type="HBoxContainer" parent="labels" unique_id=318485012]
@@ -132,6 +132,19 @@ theme_override_fonts/font = ExtResource("4_ua6yw")
 theme_override_font_sizes/font_size = 10
 text = "Chores"
 
+[node name="toastLabel" type="Label" parent="." unique_id=1040508278]
+visible = false
+z_index = 40
+layout_mode = 0
+offset_left = 140.0
+offset_top = 6.0
+offset_right = 500.0
+offset_bottom = 24.0
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="statsPanel" type="VBoxContainer" parent="." unique_id=223292621]
 layout_direction = 1
 layout_mode = 0
@@ -158,7 +171,6 @@ anchor_bottom = 1.0
 offset_right = -4.923073
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.04, 1)
 theme_override_fonts/font = ExtResource("4_ua6yw")
 theme_override_font_sizes/font_size = 12
 text = "Hunger"
@@ -183,7 +195,6 @@ anchor_bottom = 1.0
 offset_right = -4.923073
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.04, 1)
 theme_override_fonts/font = ExtResource("4_ua6yw")
 theme_override_font_sizes/font_size = 12
 text = "Happiness"
@@ -208,7 +219,6 @@ anchor_bottom = 1.0
 offset_right = -4.923073
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.04, 1)
 theme_override_fonts/font = ExtResource("4_ua6yw")
 theme_override_font_sizes/font_size = 12
 text = "Energy"
@@ -233,7 +243,6 @@ anchor_bottom = 1.0
 offset_right = -4.923073
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.04, 1)
 theme_override_fonts/font = ExtResource("4_ua6yw")
 theme_override_font_sizes/font_size = 12
 text = "Health"
@@ -258,7 +267,6 @@ anchor_bottom = 1.0
 offset_right = -4.923073
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.04, 1)
 theme_override_fonts/font = ExtResource("4_ua6yw")
 theme_override_font_sizes/font_size = 12
 text = "Cleanliness"
@@ -267,62 +275,152 @@ vertical_alignment = 1
 
 [node name="actionButtons" type="HBoxContainer" parent="." unique_id=2045156482]
 layout_mode = 0
-offset_left = 21.0
-offset_top = 310.0
-offset_right = 616.0
-offset_bottom = 341.0
-theme_override_constants/separation = 5
+offset_left = 4.0
+offset_top = 324.0
+offset_right = 640.0
+offset_bottom = 356.0
+theme_override_constants/separation = 11
 
 [node name="feedButton" type="TextureButton" parent="actionButtons" unique_id=339935574]
-custom_minimum_size = Vector2(95.625, 31.875)
+custom_minimum_size = Vector2(96, 32)
 layout_mode = 2
 texture_normal = ExtResource("5_3wlde")
 texture_pressed = ExtResource("6_24e4x")
 texture_hover = ExtResource("6_xpksx")
 stretch_mode = 0
 
+[node name="feedButtonLabel" type="Label" parent="actionButtons/feedButton" unique_id=802781424]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 16
+text = "Feed"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="playButton" type="TextureButton" parent="actionButtons" unique_id=875044464]
-custom_minimum_size = Vector2(95.625, 31.875)
-layout_mode = 2
-texture_normal = ExtResource("8_w7enk")
-texture_pressed = ExtResource("9_aputy")
-texture_hover = ExtResource("10_7paak")
-stretch_mode = 0
-
-[node name="restButton" type="TextureButton" parent="actionButtons" unique_id=1729834281]
-custom_minimum_size = Vector2(95.625, 31.875)
-layout_mode = 2
-texture_normal = ExtResource("11_5sqrc")
-texture_pressed = ExtResource("12_ilk7v")
-texture_hover = ExtResource("13_flkkw")
-stretch_mode = 0
-
-[node name="vetButton" type="TextureButton" parent="actionButtons" unique_id=650075625]
-custom_minimum_size = Vector2(95.625, 31.875)
+custom_minimum_size = Vector2(96, 32)
 layout_mode = 2
 texture_normal = ExtResource("14_hu0pd")
 texture_pressed = ExtResource("15_o5ifv")
 texture_hover = ExtResource("16_s2vcx")
 stretch_mode = 0
 
+[node name="playButtonLabel" type="Label" parent="actionButtons/playButton" unique_id=565096307]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 16
+text = "Play"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="restButton" type="TextureButton" parent="actionButtons" unique_id=1729834281]
+custom_minimum_size = Vector2(96, 32)
+layout_mode = 2
+texture_normal = ExtResource("11_5sqrc")
+texture_pressed = ExtResource("12_ilk7v")
+texture_hover = ExtResource("13_flkkw")
+stretch_mode = 0
+
+[node name="restButtonLabel" type="Label" parent="actionButtons/restButton" unique_id=1496163412]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 16
+text = "Rest"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="vetButton" type="TextureButton" parent="actionButtons" unique_id=650075625]
+custom_minimum_size = Vector2(96, 32)
+layout_mode = 2
+texture_normal = ExtResource("8_w7enk")
+texture_pressed = ExtResource("9_aputy")
+texture_hover = ExtResource("10_7paak")
+stretch_mode = 0
+
+[node name="vetButtonLabel" type="Label" parent="actionButtons/vetButton" unique_id=1534266265]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 16
+text = "Vet"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="cleanButton" type="TextureButton" parent="actionButtons" unique_id=1689068348]
-custom_minimum_size = Vector2(95.625, 31.875)
+custom_minimum_size = Vector2(96, 32)
 layout_mode = 2
 texture_normal = ExtResource("17_38m54")
 texture_pressed = ExtResource("18_h3f0y")
 texture_hover = ExtResource("19_yamhi")
 stretch_mode = 0
 
+[node name="cleanButtonLabel" type="Label" parent="actionButtons/cleanButton" unique_id=959522343]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 16
+text = "Clean"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="shopButton" type="TextureButton" parent="actionButtons" unique_id=2085302910]
-custom_minimum_size = Vector2(95.625, 31.875)
+custom_minimum_size = Vector2(96, 32)
 layout_mode = 2
-texture_normal = ExtResource("23_mudns")
-texture_pressed = ExtResource("24_knc77")
-texture_hover = ExtResource("25_fm1lg")
+texture_normal = ExtResource("35_qnnsw")
+texture_pressed = ExtResource("36_xg5gc")
+texture_hover = ExtResource("37_tlqq8")
 stretch_mode = 0
 
+[node name="shopButtonLabel" type="Label" parent="actionButtons/shopButton" unique_id=233180647]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 16
+text = "Shop"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="settingsButton" type="TextureButton" parent="." unique_id=1093563363]
-custom_minimum_size = Vector2(76.5, 25.5)
+custom_minimum_size = Vector2(77, 26)
 layout_mode = 0
 offset_left = 556.0
 offset_top = 7.0
@@ -333,13 +431,30 @@ texture_pressed = ExtResource("21_h3f0y")
 texture_hover = ExtResource("22_yamhi")
 stretch_mode = 0
 
+[node name="settingsButtonLabel" type="Label" parent="settingsButton" unique_id=1990543233]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.5
+offset_top = -3.0
+offset_right = 4.5
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 13
+text = "Settings"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="backGround" type="TextureRect" parent="." unique_id=327784508]
 z_index = -5
 layout_mode = 0
 offset_right = 640.0
 offset_bottom = 360.0
 mouse_filter = 2
-texture = ExtResource("27_fm1lg")
+texture = ExtResource("30_qvwwb")
 
 [node name="popupPanel" type="Panel" parent="." unique_id=715437813]
 process_mode = 3
@@ -354,61 +469,147 @@ process_mode = 3
 visible = false
 z_index = 1
 layout_mode = 0
-offset_left = -17.0
-offset_right = 623.0
+offset_right = 640.0
 offset_bottom = 360.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_grh26")
+
+[node name="settingsContainer" type="VBoxContainer" parent="popupPanel/settingsPopup" unique_id=-1447314477]
+layout_mode = 0
+offset_left = 210.0
+offset_top = 58.0
+offset_right = 410.0
+offset_bottom = 298.0
+theme_override_constants/separation = 10
+
+[node name="titleLabel" type="Label" parent="popupPanel/settingsPopup/settingsContainer" unique_id=-667485371]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 20
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="timeScaleBox" type="VBoxContainer" parent="popupPanel/settingsPopup/settingsContainer" unique_id=1874928512]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="timeScaleLabel" type="Label" parent="popupPanel/settingsPopup/settingsContainer/timeScaleBox" unique_id=1529837123]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 12
+text = "Game Speed: 1.0x"
+
+[node name="timeScaleSlider" type="HSlider" parent="popupPanel/settingsPopup/settingsContainer/timeScaleBox" unique_id=-1376693780]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+min_value = 0.5
+max_value = 3.0
+step = 0.1
+value = 1.0
+
+[node name="autoSaveToggle" type="CheckButton" parent="popupPanel/settingsPopup/settingsContainer" unique_id=-242293668]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 12
+button_pressed = true
+text = "Auto-save Enabled"
 
 [node name="backButton" type="TextureButton" parent="popupPanel/settingsPopup" unique_id=491727091]
 process_mode = 3
 z_index = 1
-custom_minimum_size = Vector2(76.5, 25.5)
+custom_minimum_size = Vector2(77, 26)
 layout_mode = 0
-offset_left = 298.0
-offset_top = 259.0
-offset_right = 375.0
-offset_bottom = 284.5
-texture_normal = ExtResource("29_hgu3j")
-texture_pressed = ExtResource("30_bqcyk")
-texture_hover = ExtResource("31_7lcob")
+offset_left = 270.0
+offset_top = 302.0
+offset_right = 347.0
+offset_bottom = 328.0
+texture_normal = ExtResource("8_w7enk")
+texture_pressed = ExtResource("9_aputy")
+texture_hover = ExtResource("10_7paak")
 stretch_mode = 0
+
+[node name="backButtonLabel" type="Label" parent="popupPanel/settingsPopup/backButton" unique_id=1401591833]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 13
+text = "Back"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="quitButton" type="TextureButton" parent="popupPanel/settingsPopup" unique_id=327147435]
 process_mode = 3
 z_index = 1
-custom_minimum_size = Vector2(76.5, 25.5)
+custom_minimum_size = Vector2(77, 26)
 layout_mode = 0
-offset_left = 298.0
-offset_top = 231.0
-offset_right = 375.0
-offset_bottom = 256.5
-texture_normal = ExtResource("29_hgu3j")
-texture_pressed = ExtResource("30_bqcyk")
-texture_hover = ExtResource("31_7lcob")
+offset_left = 270.0
+offset_top = 274.0
+offset_right = 347.0
+offset_bottom = 300.0
+texture_normal = ExtResource("5_3wlde")
+texture_pressed = ExtResource("6_24e4x")
+texture_hover = ExtResource("6_xpksx")
 stretch_mode = 0
+
+[node name="quitButtonLabel" type="Label" parent="popupPanel/settingsPopup/quitButton" unique_id=498081903]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 13
+text = "Quit"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="startScreenButton" type="TextureButton" parent="popupPanel/settingsPopup" unique_id=150053612]
 process_mode = 3
 z_index = 1
-custom_minimum_size = Vector2(76.5, 25.5)
+custom_minimum_size = Vector2(125, 26)
 layout_mode = 0
-offset_left = 298.0
-offset_top = 203.0
-offset_right = 375.0
-offset_bottom = 228.5
-texture_normal = ExtResource("29_hgu3j")
-texture_pressed = ExtResource("30_bqcyk")
-texture_hover = ExtResource("31_7lcob")
+offset_left = 246.0
+offset_top = 246.0
+offset_right = 371.0
+offset_bottom = 272.0
+texture_normal = ExtResource("11_5sqrc")
+texture_pressed = ExtResource("12_ilk7v")
+texture_hover = ExtResource("13_flkkw")
 stretch_mode = 0
+
+[node name="startScreenLabel" type="Label" parent="popupPanel/settingsPopup/startScreenButton" unique_id=1690354725]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -7.5
+offset_top = -3.0
+offset_right = 7.5
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 13
+text = "Start Screen"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="inventoryPanel" type="Panel" parent="popupPanel" unique_id=1727687780]
 visible = false
 z_index = 10
 layout_mode = 0
-offset_left = 71.0
-offset_top = 17.0
-offset_right = 607.0
-offset_bottom = 342.0
+offset_left = 52.0
+offset_top = 15.0
+offset_right = 588.0
+offset_bottom = 340.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_q6a8d")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="popupPanel/inventoryPanel" unique_id=1019455912]
@@ -440,14 +641,29 @@ size_flags_horizontal = 4
 [node name="invCloseButton" type="TextureButton" parent="popupPanel/inventoryPanel/VBoxContainer" unique_id=762117610]
 process_mode = 3
 z_index = 47
-custom_minimum_size = Vector2(95.625, 31.875)
+custom_minimum_size = Vector2(96, 32)
 layout_mode = 2
 size_flags_horizontal = 4
-texture_normal = ExtResource("29_hgu3j")
-texture_pressed = ExtResource("30_bqcyk")
-texture_hover = ExtResource("31_7lcob")
+texture_normal = ExtResource("8_w7enk")
+texture_pressed = ExtResource("9_aputy")
+texture_hover = ExtResource("10_7paak")
 ignore_texture_size = true
 stretch_mode = 4
+
+[node name="invCloseLabel" type="Label" parent="popupPanel/inventoryPanel/VBoxContainer/invCloseButton" unique_id=1895019713]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 16
+text = "Close"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="shopPanel" type="Panel" parent="popupPanel" unique_id=1629543610]
 visible = false
@@ -465,10 +681,25 @@ offset_left = 495.0
 offset_top = 295.0
 offset_right = 564.0
 offset_bottom = 319.0
-texture_normal = ExtResource("29_hgu3j")
-texture_pressed = ExtResource("30_bqcyk")
-texture_hover = ExtResource("31_7lcob")
+texture_normal = ExtResource("17_38m54")
+texture_pressed = ExtResource("18_h3f0y")
+texture_hover = ExtResource("19_yamhi")
 stretch_mode = 4
+
+[node name="closeLabel" type="Label" parent="popupPanel/shopPanel/closeButton" unique_id=623570097]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 12
+text = "Close"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="moneyLabel" type="Label" parent="popupPanel/shopPanel" unique_id=1791414255]
 layout_mode = 0
@@ -494,7 +725,7 @@ layout_mode = 0
 offset_left = 75.0
 offset_top = 6.0
 offset_right = 575.0
-offset_bottom = 206.0
+offset_bottom = 268.0
 mouse_filter = 2
 theme_override_fonts/font = ExtResource("4_ua6yw")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_q6a8d")
@@ -575,8 +806,7 @@ process_mode = 3
 visible = false
 z_index = 1
 layout_mode = 0
-offset_left = -17.0
-offset_right = 623.0
+offset_right = 640.0
 offset_bottom = 360.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_grh26")
 
@@ -584,9 +814,9 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_grh26")
 process_mode = 3
 z_index = 31
 layout_mode = 0
-offset_left = 240.0
+offset_left = 221.0
 offset_top = 72.0
-offset_right = 432.0
+offset_right = 413.0
 offset_bottom = 297.0
 mouse_filter = 2
 theme_override_constants/separation = 10
@@ -603,14 +833,29 @@ max_length = 12
 
 [node name="submitNameButton" type="TextureButton" parent="popupPanel/changeNamePanel/vBoxContainer" unique_id=1503177363]
 process_mode = 3
-custom_minimum_size = Vector2(76.5, 25.5)
+custom_minimum_size = Vector2(77, 26)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-texture_normal = ExtResource("35_qnnsw")
-texture_pressed = ExtResource("36_xg5gc")
-texture_hover = ExtResource("37_tlqq8")
+texture_normal = ExtResource("11_5sqrc")
+texture_pressed = ExtResource("12_ilk7v")
+texture_hover = ExtResource("13_flkkw")
 stretch_mode = 4
+
+[node name="submitNameLabel" type="Label" parent="popupPanel/changeNamePanel/vBoxContainer/submitNameButton" unique_id=384094359]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 14
+text = "Submit"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="errorLabel" type="Label" parent="popupPanel/changeNamePanel/vBoxContainer" unique_id=2005846358]
 process_mode = 3
@@ -621,13 +866,12 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="messageLabel" type="Label" parent="popupPanel" unique_id=1057714827]
-visible = false
 z_index = 20
 layout_mode = 0
-offset_left = 120.0
-offset_top = 324.0
-offset_right = 520.0
-offset_bottom = 346.0
+offset_left = 124.0
+offset_top = 292.0
+offset_right = 524.0
+offset_bottom = 314.0
 theme_override_fonts/font = ExtResource("4_ua6yw")
 theme_override_font_sizes/font_size = 12
 horizontal_alignment = 1
@@ -637,17 +881,16 @@ vertical_alignment = 1
 visible = false
 z_index = 2
 layout_mode = 0
-offset_left = -17.0
-offset_right = 623.0
+offset_right = 640.0
 offset_bottom = 360.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_grh26")
 
 [node name="helpVBox" type="VBoxContainer" parent="popupPanel/helpPanel" unique_id=1999332061]
 layout_mode = 0
-offset_left = 63.0
+offset_left = 56.0
 offset_top = 39.0
-offset_right = 563.0
-offset_bottom = 311.0
+offset_right = 572.0
+offset_bottom = 332.0
 theme_override_constants/separation = 8
 alignment = 1
 
@@ -664,29 +907,44 @@ custom_minimum_size = Vector2(430, 150)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_fonts/font = ExtResource("4_ua6yw")
-theme_override_font_sizes/font_size = 18
-text = "Feed, play, rest, clean, and check health to keep your pet happy.
-
-Hunger, Energy, Cleanliness, Health, and Happiness change over time.
-
-Low stats cause bad moods. Use the shop and inventory to recover stats."
+theme_override_font_sizes/font_size = 12
+text = "Core stats: Hunger, Energy, Cleanliness, Health, Happiness (0-100).
+Time passes and stats slowly drop. Low stats change the pet's mood/thoughts.
+Care actions: Use items from Feed, Play, Rest, Vet, Clean to restore stats.
+Items cost money. Purchases add to Expenses and count toward a weekly limit.
+Chores earn money once per day, part of each reward goes to Savings. 
+Reports show today/week totals, category breakdown, and savings progress."
 autowrap_mode = 3
 
 [node name="helpCloseButton" type="TextureButton" parent="popupPanel/helpPanel/helpVBox" unique_id=1904428721]
-custom_minimum_size = Vector2(95.625, 31.875)
+custom_minimum_size = Vector2(96, 32)
 layout_mode = 2
 size_flags_horizontal = 4
-texture_normal = ExtResource("29_hgu3j")
-texture_pressed = ExtResource("30_bqcyk")
-texture_hover = ExtResource("31_7lcob")
+texture_normal = ExtResource("5_3wlde")
+texture_pressed = ExtResource("6_24e4x")
+texture_hover = ExtResource("6_xpksx")
 stretch_mode = 4
+
+[node name="helpCloseLabel" type="Label" parent="popupPanel/helpPanel/helpVBox/helpCloseButton" unique_id=120803481]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 16
+text = "Close"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="reportPanel" type="Panel" parent="popupPanel" unique_id=1498013185]
 visible = false
 z_index = 2
 layout_mode = 0
-offset_left = -17.0
-offset_right = 623.0
+offset_right = 640.0
 offset_bottom = 360.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_grh26")
 
@@ -740,19 +998,33 @@ custom_minimum_size = Vector2(410, 90)
 layout_mode = 2
 
 [node name="reportCloseButton" type="TextureButton" parent="popupPanel/reportPanel/reportVBox" unique_id=146688946]
-custom_minimum_size = Vector2(95.625, 31.875)
+custom_minimum_size = Vector2(96, 32)
 layout_mode = 2
 size_flags_horizontal = 4
-texture_normal = ExtResource("29_hgu3j")
-texture_pressed = ExtResource("30_bqcyk")
-texture_hover = ExtResource("31_7lcob")
+texture_normal = ExtResource("14_hu0pd")
+texture_pressed = ExtResource("15_o5ifv")
+texture_hover = ExtResource("16_s2vcx")
 stretch_mode = 4
+
+[node name="reportCloseLabel" type="Label" parent="popupPanel/reportPanel/reportVBox/reportCloseButton" unique_id=688067490]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 16
+text = "Close"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="chorePanel" type="Panel" parent="popupPanel" unique_id=1068689742]
 z_index = 2
 layout_mode = 0
-offset_left = -17.0
-offset_right = 623.0
+offset_right = 640.0
 offset_bottom = 360.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_grh26")
 
@@ -788,12 +1060,30 @@ layout_mode = 2
 [node name="choreList" type="VBoxContainer" parent="popupPanel/chorePanel/choreVBox/choreScroll" unique_id=207651660]
 custom_minimum_size = Vector2(280, 120)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
 
 [node name="choreCloseButton" type="TextureButton" parent="popupPanel/chorePanel/choreVBox" unique_id=754226402]
-custom_minimum_size = Vector2(95.625, 31.875)
+custom_minimum_size = Vector2(96, 32)
 layout_mode = 2
 size_flags_horizontal = 4
-texture_normal = ExtResource("29_hgu3j")
-texture_pressed = ExtResource("30_bqcyk")
-texture_hover = ExtResource("31_7lcob")
+texture_normal = ExtResource("11_5sqrc")
+texture_pressed = ExtResource("12_ilk7v")
+texture_hover = ExtResource("13_flkkw")
 stretch_mode = 4
+
+[node name="choreCloseLabel" type="Label" parent="popupPanel/chorePanel/choreVBox/choreCloseButton" unique_id=544605792]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 16
+text = "Close"
+horizontal_alignment = 1
+vertical_alignment = 1

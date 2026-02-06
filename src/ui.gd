@@ -1,3 +1,7 @@
+## Main UI controller
+# This file drives the HUD, popups, and shop/inventory screens.
+# It also handles reports, chores, and settings.
+
 extends Control
 
 # Node bindings (scene paths)
@@ -9,6 +13,13 @@ extends Control
 @onready var changeNameInput = $popupPanel/changeNamePanel/vBoxContainer/changeNameInput
 @onready var settingsPopup = $popupPanel/settingsPopup
 @onready var startScreenButton = $popupPanel/settingsPopup/startScreenButton
+
+# Settings controls (from scene)
+@onready var timeScaleSlider = $popupPanel/settingsPopup/settingsContainer/timeScaleBox/timeScaleSlider
+@onready var timeScaleLabel = $popupPanel/settingsPopup/settingsContainer/timeScaleBox/timeScaleLabel
+@onready var autoSaveToggle = $popupPanel/settingsPopup/settingsContainer/autoSaveToggle
+
+@onready var settingsContainer = $popupPanel/settingsPopup/settingsContainer
 
 @onready var helpButton = $labels/quickButtons/helpButton
 @onready var reportButton = $labels/quickButtons/reportButton
@@ -41,23 +52,38 @@ extends Control
 @onready var choreList = $popupPanel/chorePanel/choreVBox/choreScroll/choreList
 
 @onready var messageLabel = $popupPanel/messageLabel
+@onready var clockLabel = $labels/clockLabel
+@onready var toastLabel = $toastLabel
+@onready var backGround = $backGround
 
-const ITEM_THEME_PATH: String = "res://assets/themes/inventory_theme.tres"
 var itemTheme: Theme
 
 # --- Font size constants (tweak these)
-const INVENTORY_ITEM_FONT_SIZE: int = 10
-const INVENTORY_BUTTON_FONT_SIZE: int = 10
+const inventoryItemFontSize: int = 10
+const inventoryButtonFontSize: int = 10
 
-const NAME_MIN_LEN: int = 2
-const NAME_MAX_LEN: int = 12
-const EXPENSE_LOG_LIMIT: int = 200
-const WEEKLY_LIMIT_DEFAULT: int = 120
-const SAVINGS_GOAL_DEFAULT: int = 100
-const CHORE_SAVINGS_RATE: float = 0.2
-const DAILY_CHORE_COUNT: int = 3
+const nameMinLen: int = 2
+const nameMaxLen: int = 12
+const expenseLogLimit: int = 200
+const weeklyLimitDefault: int = 120
+const savingsGoalDefault: int = 100
+const choreSavingsRate: float = 0.2
+const dailyChoreCount: int = 3
+const choreTapMin: int = 6
+const choreTapMax: int = 20
+const choreTapScale: float = 1.5
+const criticalStatThreshold: int = 25
+const criticalStatCount: int = 3
+const criticalChoreRewardMultiplier: float = 0.5
+const criticalChoreTapMultiplier: float = 1.5
+const backgroundTexturePaths := [
+	"res://assets/backgrounds/day.png",
+	"res://assets/backgrounds/sunset.png",
+	"res://assets/backgrounds/night.png",
+	"res://assets/backgrounds/sunrise.png"
+]
 
-const CHORES: Array = [
+const chores: Array = [
 	{"id": "makeBed", "label": "Make your bed", "reward": 6},
 	{"id": "study", "label": "Study 15 minutes", "reward": 8},
 	{"id": "dishes", "label": "Help with dishes", "reward": 10},
@@ -71,7 +97,7 @@ const CHORES: Array = [
 ]
 
 # Shop section order for tabs
-const SHOP_SECTIONS: Array = ["feed", "play", "rest", "vet", "clean"]
+const shopSections: Array = ["feed", "play", "rest", "vet", "clean"]
 
 # Autoload / scene managers
 var gameManagerRef
@@ -129,49 +155,36 @@ var shopTabContainer
 var currentInventoryName: String = "feed"
 
 var currentShopSection: String = "feed"
+var choreTapProgress: Dictionary = {}
+var lastChoreNotifyDay: int = -1
+var toastTimer: Timer
+var backgroundTextures: Array = []
+var currentBackgroundPhase: int = -1
 
 # Startup
 func _ready() -> void:
 	# Set up references, buttons, and initial UI state.
 	# resolve managers
-	if typeof(gameManager) != TYPE_NIL:
-		gameManagerRef = gameManager
-	else:
-		gameManagerRef = get_tree().get_root().get_node_or_null("Main/gameManager")
+	gameManagerRef = gameManager
+	saveLoadManagerRef = saveLoadManager
+	inventoryManagerRef = inventoryManager
+	itemDb = itemDB
+	petManagerRef = petManager
 
-	if typeof(saveLoadManager) != TYPE_NIL:
-		saveLoadManagerRef = saveLoadManager
-	else:
-		saveLoadManagerRef = get_tree().get_root().get_node_or_null("Main/saveLoadManager")
-
-	if typeof(inventoryManager) != TYPE_NIL:
-		inventoryManagerRef = inventoryManager
-	else:
-		inventoryManagerRef = get_tree().get_root().get_node_or_null("Main/inventoryManager")
-
-	if typeof(itemDB) != TYPE_NIL:
-		itemDb = itemDB
-	else:
-		itemDb = get_tree().get_root().get_node_or_null("Main/itemDB")
-
-	if typeof(petManager) != TYPE_NIL:
-		petManagerRef = petManager
-	else:
-		petManagerRef = get_tree().get_root().get_node_or_null("Main/pet")
-
-	startScene = get_tree().get_root().get_node_or_null("Main/start")
-	if startScene == null:
-		startScene = get_tree().get_root().get_node_or_null("Main/startLayer/start")
+	startScene = get_tree().get_root().get_node("Main/startLayer/start")
 
 	# initial visibility
 	popupPanel.visible = false
 	changeName.visible = false
+	changeNamePanel.visible = false
 	inventoryPanel.visible = false
 	settingsPopup.visible = false
+	shopPanel.visible = false
 	helpPanel.visible = false
 	reportPanel.visible = false
 	chorePanel.visible = false
 	messageLabel.visible = false
+	toastLabel.visible = false
 
 	# connect buttons
 	invCloseButton.pressed.connect(_onInvClosePressed)
@@ -188,17 +201,27 @@ func _ready() -> void:
 
 	updateValues()
 	_ensureEconomyData()
-	_setHelpText()
 
 	# optional theme
-	if FileAccess.file_exists(ITEM_THEME_PATH):
-		itemTheme = load(ITEM_THEME_PATH)
-
-	if FileAccess.file_exists("res://assets/fonts/pixelFont.ttf"):
-		pixelFontRes = load("res://assets/fonts/pixelFont.ttf")
+	pixelFontRes = load("res://assets/fonts/pixelFont.ttf")
 
 	# ensure shop panel exists or map nodes
 	_ensureShopPanel()
+	gameManagerRef.dayPassed.connect(_onDayPassed)
+	
+	# Setup settings controls
+	_setupSettingsUI()
+	
+	# Load saved settings
+	_loadSettings()
+
+	_loadBackgrounds()
+	_updateBackground(true)
+
+	toastTimer = Timer.new()
+	toastTimer.one_shot = true
+	add_child(toastTimer)
+	toastTimer.timeout.connect(_onToastTimeout)
 
 
 # Connect buttons recursively
@@ -208,14 +231,85 @@ func _connectButtons(node: Node) -> void:
 		if child is TextureButton:
 			# bind the child and pass it into handler
 			child.pressed.connect(onButtonPressed.bind(child))
+			_wireButtonLabelPress(child)
 		# recurse into children
 		_connectButtons(child)
 
+
+func _wireButtonLabelPress(btn: TextureButton) -> void:
+	# Keep text aligned with the pressed button offset.
+	var label = _findButtonLabel(btn)
+	if label == null:
+		return
+	if not label.has_meta("base_pos"):
+		label.set_meta("base_pos", label.position)
+	btn.button_down.connect(func() -> void: _offsetButtonLabel(btn, true))
+	btn.button_up.connect(func() -> void: _offsetButtonLabel(btn, false))
+	btn.mouse_exited.connect(func() -> void: _offsetButtonLabel(btn, false))
+
+
+func _findButtonLabel(btn: TextureButton) -> Label:
+	# Find the first label inside a button.
+	for child in btn.get_children():
+		if child is Label:
+			return child
+	return null
+
+
+func _offsetButtonLabel(btn: TextureButton, pressed: bool) -> void:
+	# Nudge the label to match the button press animation.
+	var label = _findButtonLabel(btn)
+	if label == null:
+		return
+	var basePos = label.get_meta("base_pos") if label.has_meta("base_pos") else label.position
+	label.position = basePos + (Vector2(0, 4) if pressed else Vector2.ZERO)
+
+
+# Setup settings UI with signal connections
+func _setupSettingsUI() -> void:
+	# Connect settings control signals
+	timeScaleSlider.value_changed.connect(_onTimeScaleChanged)
+	autoSaveToggle.toggled.connect(_onAutoSaveToggled)
+	
+
+# Settings handlers
+func _onTimeScaleChanged(value: float) -> void:
+	# Update game speed and save the setting.
+	gameManagerRef.timeScale = value
+	timeScaleLabel.text = "Game Speed: %.1fx" % value
+	# Save setting
+	saveLoadManagerRef.playerData["timeScale"] = value
+
+
+func _onAutoSaveToggled(enabled: bool) -> void:
+	# Store auto-save preference
+	saveLoadManagerRef.playerData["autoSaveEnabled"] = enabled
+	saveLoadManagerRef.saveGame()
+
+
+
+func _loadSettings() -> void:
+	# Load saved settings from player data
+	var pd = saveLoadManagerRef.playerData
+	
+	# Load time scale
+	if pd.has("timeScale"):
+		var scale = float(pd.get("timeScale", 1.0))
+		timeScaleSlider.value = scale
+		gameManagerRef.timeScale = scale
+	
+	# Load auto-save preference
+	if pd.has("autoSaveEnabled"):
+		var enabled = bool(pd.get("autoSaveEnabled", true))
+		autoSaveToggle.button_pressed = enabled
+	
 
 # Update UI values
 func _process(delta: float) -> void:
 	# Keep UI values updated every frame.
 	updateValues()
+	_updateClock()
+	_updateBackground()
 
 
 func updateValues() -> void:
@@ -281,19 +375,28 @@ func onButtonPressed(button: TextureButton) -> void:
 func showPopup() -> void:
 	# Show the main popup panel.
 	popupPanel.visible = true
+	_setThoughtSuppressed(true)
+
+
+func _setThoughtSuppressed(suppressed: bool) -> void:
+	# Hide or show the pet thought bubble when popups are open.
+	petManagerRef.setThoughtSuppressed(suppressed)
 
 func settingsPressed() -> void:
 	# Open settings and pause the game.
 	showPopup()
 	gameManagerRef.pauseGame()
 	settingsPopup.visible = true
-	petManagerRef.setThoughtVisible(false)
+	_setThoughtSuppressed(true)
 
 
 func backPressed() -> void:
-	# Close all popups and resume gameplay.
+	# Close all popups and resume gameplay if a popup paused the game.
+	var shouldResume = settingsPopup.visible or helpPanel.visible or reportPanel.visible or chorePanel.visible or changeNamePanel.visible
+	
 	popupPanel.visible = false
 	changeName.visible = false
+	changeNamePanel.visible = false
 	inventoryPanel.visible = false
 	settingsPopup.visible = false
 	shopPanel.visible = false
@@ -302,8 +405,10 @@ func backPressed() -> void:
 	chorePanel.visible = false
 	messageLabel.visible = false
 
-	gameManagerRef.resumeGame()
-	petManagerRef.setThoughtVisible(true)
+	# Resume if any pausing popup was open
+	if shouldResume:
+		gameManagerRef.resumeGame()
+	_setThoughtSuppressed(false)
 
 
 func changeNamePressed() -> void:
@@ -337,8 +442,8 @@ func changePetName() -> void:
 func _validatePetName(petName: String) -> String:
 	# Enforce simple name rules for input validation.
 	var trimmed = petName.strip_edges()
-	if trimmed.length() < NAME_MIN_LEN or trimmed.length() > NAME_MAX_LEN:
-		return "Name must be %d-%d characters." % [NAME_MIN_LEN, NAME_MAX_LEN]
+	if trimmed.length() < nameMinLen or trimmed.length() > nameMaxLen:
+		return "Name must be %d-%d characters." % [nameMinLen, nameMaxLen]
 	var regex = RegEx.new()
 	regex.compile("^[A-Za-z ]+$")
 	if regex.search(trimmed) == null:
@@ -346,37 +451,83 @@ func _validatePetName(petName: String) -> String:
 	return ""
 
 
-func _setHelpText() -> void:
-	# Centralize the help copy so it is easy to edit later.
-	if helpTextLabel == null:
-		return
-	helpTextLabel.text = "Core stats: Hunger, Energy, Cleanliness, Health, Happiness (0-100).\n
-		Time passes and stats slowly drop. Low stats change the pet's mood/thoughts.\n
-		Care actions: Use items from Feed, Play, Rest, Vet, Clean to restore stats.\n
-		Items cost money. Purchases add to Expenses and count toward a weekly limit.\n
-		Chores earn money once per day; part of each reward goes to Savings.\n
-		Reports show today/week totals, category breakdown, and savings progress."
+
 
 
 func _showMessage(text: String) -> void:
 	# Show a short message in the popup area.
-	if messageLabel == null:
-		return
 	messageLabel.text = text
 	messageLabel.visible = true
 
 
+func _showToast(text: String, seconds: float = 2.5) -> void:
+	# Show a short message for a few seconds.
+	toastLabel.text = text
+	toastLabel.visible = true
+	toastTimer.stop()
+	toastTimer.start(seconds)
+
+
+func _onToastTimeout() -> void:
+	# Hide the toast label after the timer ends.
+	toastLabel.visible = false
+
+
+func _updateClock() -> void:
+	# Update the on-screen time label.
+	var dayLength = float(gameManagerRef.dayLength)
+	if dayLength <= 0.0:
+		return
+	var seconds = float(gameManagerRef.getSecondsIntoDay())
+	var dayFraction = clamp(seconds / dayLength, 0.0, 0.999)
+	var slot = int(floor(dayFraction * 96.0))
+	var minutes = slot * 15
+	var hours = int(minutes / 60)
+	var mins = int(minutes % 60)
+	clockLabel.text = "Time: %02d:%02d" % [hours, mins]
+
+
+func _loadBackgrounds() -> void:
+	# Load background textures for different times of day.
+	backgroundTextures.clear()
+	for path in backgroundTexturePaths:
+		backgroundTextures.append(load(path))
+
+
+func _updateBackground(force: bool = false) -> void:
+	# Pick the correct background based on the in-game clock.
+	var dayLength = float(gameManagerRef.dayLength)
+	if dayLength <= 0.0:
+		return
+	var seconds = float(gameManagerRef.getSecondsIntoDay())
+	var dayFraction = clamp(seconds / dayLength, 0.0, 0.999)
+	var slot = int(floor(dayFraction * 96.0))
+	var minutes = slot * 15
+	var hours = int(minutes / 60)
+	var phase = 0
+	if hours < 6:
+		phase = 3 # sunrise
+	elif hours < 18:
+		phase = 0 # day
+	elif hours < 21:
+		phase = 1 # sunset
+	else:
+		phase = 2 # night
+	if not force and phase == currentBackgroundPhase:
+		return
+	currentBackgroundPhase = phase
+	backGround.texture = backgroundTextures[phase]
+
+
 func _ensureEconomyData() -> void:
 	# Guarantee required economy keys exist in player data.
-	if saveLoadManagerRef == null:
-		return
 	var pd = saveLoadManagerRef.playerData
 	if not pd.has("expenses"):
 		pd["expenses"] = []
 	if not pd.has("weeklyLimit"):
-		pd["weeklyLimit"] = WEEKLY_LIMIT_DEFAULT
+		pd["weeklyLimit"] = weeklyLimitDefault
 	if not pd.has("savingsGoal"):
-		pd["savingsGoal"] = SAVINGS_GOAL_DEFAULT
+		pd["savingsGoal"] = savingsGoalDefault
 	if not pd.has("savingsSaved"):
 		pd["savingsSaved"] = 0
 	if not pd.has("chores"):
@@ -389,7 +540,7 @@ func _ensureEconomyData() -> void:
 func _warnIfNearWeeklyLimit() -> void:
 	# Warn the player as the weekly spending cap fills.
 	var pd = saveLoadManagerRef.playerData
-	var weeklyLimit = int(pd.get("weeklyLimit", WEEKLY_LIMIT_DEFAULT))
+	var weeklyLimit = int(pd.get("weeklyLimit", weeklyLimitDefault))
 	if weeklyLimit <= 0:
 		messageLabel.visible = false
 		return
@@ -408,7 +559,7 @@ func _logTransaction(kind: String, category: String, itemId: String, amount: int
 	var expenses: Array = pd.get("expenses", [])
 	var entry = {
 		"day": int(pd.get("day", 0)),
-		"sec": int(gameManagerRef.getSecondsIntoDay()) if gameManagerRef else 0,
+		"sec": int(gameManagerRef.getSecondsIntoDay()),
 		"kind": kind,
 		"category": category,
 		"item": itemId,
@@ -416,7 +567,7 @@ func _logTransaction(kind: String, category: String, itemId: String, amount: int
 		"tag": tag
 	}
 	expenses.append(entry)
-	if expenses.size() > EXPENSE_LOG_LIMIT:
+	if expenses.size() > expenseLogLimit:
 		expenses.pop_front()
 	pd["expenses"] = expenses
 
@@ -459,11 +610,10 @@ func _refreshReport() -> void:
 	var todayIncome = _sumTransactions("income", 1)
 	var weekExpense = _sumTransactions("expense", 7)
 	var weekIncome = _sumTransactions("income", 7)
-	var weeklyLimit = int(pd.get("weeklyLimit", WEEKLY_LIMIT_DEFAULT))
-	if reportStatsLabel != null:
-		reportStatsLabel.text = "Today: -$%d  +$%d | Week: -$%d  +$%d | Limit: $%d" % [
-			todayExpense, todayIncome, weekExpense, weekIncome, weeklyLimit
-		]
+	var weeklyLimit = int(pd.get("weeklyLimit", weeklyLimitDefault))
+	reportStatsLabel.text = "Today: -$%d  +$%d | Week: -$%d  +$%d | Limit: $%d" % [
+		todayExpense, todayIncome, weekExpense, weekIncome, weeklyLimit
+	]
 
 	var breakdown = _buildCategoryBreakdown(7)
 	var parts: Array = []
@@ -471,24 +621,20 @@ func _refreshReport() -> void:
 		parts.append("%s $%d" % [category.capitalize(), int(breakdown[category])])
 	if parts.size() == 0:
 		parts.append("No expenses yet")
-	if reportBreakdownLabel != null:
-		reportBreakdownLabel.text = "Breakdown: " + ", ".join(parts)
+	reportBreakdownLabel.text = "Breakdown: " + ", ".join(parts)
 
 	var savingsSaved = int(pd.get("savingsSaved", 0))
-	var savingsGoal = int(pd.get("savingsGoal", SAVINGS_GOAL_DEFAULT))
+	var savingsGoal = int(pd.get("savingsGoal", savingsGoalDefault))
 	var percent = 0
 	if savingsGoal > 0:
 		percent = int(round(100.0 * float(savingsSaved) / float(savingsGoal)))
-	if reportSavingsLabel != null:
-		reportSavingsLabel.text = "Savings: $%d / $%d (%d%%)" % [savingsSaved, savingsGoal, percent]
+	reportSavingsLabel.text = "Savings: $%d / $%d (%d%%)" % [savingsSaved, savingsGoal, percent]
 
 	_refreshRecentList()
 
 
 func _refreshRecentList() -> void:
 	# Show the last few transactions for the demo report.
-	if reportRecentList == null:
-		return
 	for child in reportRecentList.get_children():
 		child.queue_free()
 	var pd = saveLoadManagerRef.playerData
@@ -505,9 +651,8 @@ func _refreshRecentList() -> void:
 			int(e.get("amount", 0)),
 			str(e.get("item", ""))
 		]
-		if pixelFontRes:
-			label.add_theme_font_override("font", pixelFontRes)
-			label.add_theme_font_size_override("font_size", 10)
+		label.add_theme_font_override("font", pixelFontRes)
+		label.add_theme_font_size_override("font_size", 10)
 		reportRecentList.add_child(label)
 
 
@@ -536,7 +681,7 @@ func openHelp() -> void:
 	showPopup()
 	helpPanel.visible = true
 	gameManagerRef.pauseGame()
-	petManagerRef.setThoughtVisible(false)
+	_setThoughtSuppressed(true)
 
 
 func closeHelp() -> void:
@@ -550,7 +695,7 @@ func openReport() -> void:
 	reportPanel.visible = true
 	_refreshReport()
 	gameManagerRef.pauseGame()
-	petManagerRef.setThoughtVisible(false)
+	_setThoughtSuppressed(true)
 
 
 func closeReport() -> void:
@@ -564,7 +709,7 @@ func openChores() -> void:
 	chorePanel.visible = true
 	_refreshChorePanel()
 	gameManagerRef.pauseGame()
-	petManagerRef.setThoughtVisible(false)
+	_setThoughtSuppressed(true)
 
 
 func closeChores() -> void:
@@ -575,33 +720,93 @@ func closeChores() -> void:
 func _resetChoresIfNewDay() -> void:
 	# Clear daily chore completion when the day changes.
 	var pd = saveLoadManagerRef.playerData
-	var chores = pd.get("chores", {"lastDay": -1, "done": [], "available": []})
+	var choresData = pd.get("chores", {"lastDay": -1, "done": [], "available": []})
 	var today = int(pd.get("day", 0))
-	if int(chores.get("lastDay", -1)) != today:
-		chores["lastDay"] = today
-		chores["done"] = []
-		chores["available"] = _rollDailyChores()
-	elif int(chores.get("available", []).size()) == 0:
-		chores["available"] = _rollDailyChores()
-	pd["chores"] = chores
+	if int(choresData.get("lastDay", -1)) != today:
+		choresData["lastDay"] = today
+		choresData["done"] = []
+		choresData["available"] = _rollDailyChores()
+		choreTapProgress.clear()
+		_notifyNewChores(today, choresData["available"].size())
+	elif int(choresData.get("available", []).size()) == 0:
+		choresData["available"] = _rollDailyChores()
+		choreTapProgress.clear()
+		_notifyNewChores(today, choresData["available"].size())
+	pd["chores"] = choresData
+
+
+func _notifyNewChores(today: int, count: int) -> void:
+	# Show a short message when new chores appear.
+	if count <= 0:
+		return
+	if today == lastChoreNotifyDay:
+		return
+	lastChoreNotifyDay = today
+	_showToast("New chores available!")
+
+
+func _onDayPassed(_newDay: int) -> void:
+	# Ensure chores refresh and notify when a new day starts.
+	_resetChoresIfNewDay()
+	if chorePanel.visible:
+		_refreshChorePanel()
+
+
+func _getChoreTapTarget(chore: Dictionary) -> int:
+	# Higher reward chores take more taps.
+	var reward = int(chore.get("reward", 0))
+	var target = clamp(int(round(float(reward) * choreTapScale)), choreTapMin, choreTapMax)
+	if _isCriticalStats():
+		target = int(ceil(float(target) * criticalChoreTapMultiplier))
+	return target
 
 
 func _rollDailyChores() -> Array:
 	# Pick a random set of chores for the day.
 	var ids: Array = []
-	for chore in CHORES:
+	for chore in chores:
 		ids.append(str(chore.get("id", "")))
 	ids.shuffle()
-	var count = min(DAILY_CHORE_COUNT, ids.size())
+	var count = min(dailyChoreCount, ids.size())
 	return ids.slice(0, count)
 
 
 func _getChoreById(choreId: String) -> Dictionary:
 	# Find a chore definition by id.
-	for chore in CHORES:
+	for chore in chores:
 		if str(chore.get("id", "")) == choreId:
 			return chore
 	return {}
+
+
+func _truncateText(text: String, maxLen: int) -> String:
+	# Keep button labels from forcing extra width.
+	if text.length() <= maxLen:
+		return text
+	return text.substr(0, max(0, maxLen - 3)) + "..."
+
+
+func _countLowStats(threshold: int) -> int:
+	# Count stats at or below the low threshold.
+	var stats: Dictionary = saveLoadManagerRef.playerData.get("stats", {})
+	var lowCount = 0
+	for statName in stats.keys():
+		if int(stats.get(statName, 100)) <= threshold:
+			lowCount += 1
+	return lowCount
+
+
+func _isCriticalStats() -> bool:
+	# Critical state when several stats are too low.
+	return _countLowStats(criticalStatThreshold) >= criticalStatCount
+
+
+func _getAdjustedChoreReward(chore: Dictionary) -> int:
+	# Reduce payout when the pet is in a critical state.
+	var reward = int(chore.get("reward", 0))
+	if _isCriticalStats():
+		return max(1, int(round(float(reward) * criticalChoreRewardMultiplier)))
+	return reward
 
 
 func _refreshChorePanel() -> void:
@@ -613,27 +818,63 @@ func _refreshChorePanel() -> void:
 	var choresData: Dictionary = saveLoadManagerRef.playerData.get("chores", {})
 	var done: Array = choresData.get("done", [])
 	var available: Array = choresData.get("available", [])
+	# Drop progress for chores no longer available
+	for key in choreTapProgress.keys():
+		if not available.has(key):
+			choreTapProgress.erase(key)
 	for choreId in available:
 		var chore = _getChoreById(str(choreId))
 		if chore.is_empty():
 			continue
 		var btn = Button.new()
-		btn.text = "%s (+$%d)" % [str(chore.get("label", "Chore")), int(chore.get("reward", 0))]
-		if pixelFontRes:
-			btn.add_theme_font_override("font", pixelFontRes)
-			btn.add_theme_font_size_override("font_size", 12)
+		var tapsRequired = _getChoreTapTarget(chore)
+		var tapsDone = int(choreTapProgress.get(str(choreId), 0))
+		var reward = _getAdjustedChoreReward(chore)
+		var shortLabel = _truncateText(str(chore.get("label", "Chore")), 20)
+		btn.text = "%s  +$%d\n%d/%d" % [shortLabel, reward, tapsDone, tapsRequired]
+		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		btn.custom_minimum_size = Vector2(0, 0)
+		btn.add_theme_font_override("font", pixelFontRes)
+		btn.add_theme_font_size_override("font_size", 12)
 		if done.has(chore.get("id", "")):
 			btn.disabled = true
-		btn.pressed.connect(func() -> void: _completeChore(chore))
+		btn.pressed.connect(func() -> void: _onChoreTap(chore))
 		choreList.add_child(btn)
 
-	if choreInfoLabel != null:
-		if available.size() == 0:
-			choreInfoLabel.text = "No chores today."
-		elif done.size() >= available.size():
-			choreInfoLabel.text = "All chores completed today."
-		else:
-			choreInfoLabel.text = "Complete chores to earn money and savings. (%d/%d)" % [done.size(), available.size()]
+	if available.size() == 0:
+		choreInfoLabel.text = "No chores today."
+	elif done.size() >= available.size():
+		choreInfoLabel.text = "All chores completed today."
+	else:
+		choreInfoLabel.text = "Tap a chore to work toward it. (%d/%d)" % [done.size(), available.size()]
+	if _isCriticalStats() and available.size() > 0:
+		choreInfoLabel.text += " \nLow stats make chores harder and pay less."
+
+
+func _onChoreTap(chore: Dictionary) -> void:
+	# Progress a chore by tapping its button.
+	_ensureEconomyData()
+	_resetChoresIfNewDay()
+	var pd = saveLoadManagerRef.playerData
+	var choresData = pd.get("chores", {"lastDay": -1, "done": [], "available": []})
+	var done: Array = choresData.get("done", [])
+	var available: Array = choresData.get("available", [])
+	var choreId = str(chore.get("id", ""))
+	if choreId == "" or not available.has(choreId):
+		_showMessage("This chore is not available today.")
+		return
+	if done.has(choreId):
+		_showMessage("Chore already done today.")
+		return
+	var target = _getChoreTapTarget(chore)
+	var current = int(choreTapProgress.get(choreId, 0)) + 1
+	choreTapProgress[choreId] = current
+	choreInfoLabel.text = "Working on %s: %d/%d taps" % [str(chore.get("label", "Chore")), current, target]
+	if current >= target:
+		choreTapProgress.erase(choreId)
+		_completeChore(chore)
+		return
+	_refreshChorePanel()
 
 
 func _completeChore(chore: Dictionary) -> void:
@@ -641,9 +882,9 @@ func _completeChore(chore: Dictionary) -> void:
 	_ensureEconomyData()
 	_resetChoresIfNewDay()
 	var pd = saveLoadManagerRef.playerData
-	var chores = pd.get("chores", {"lastDay": -1, "done": [], "available": []})
-	var done: Array = chores.get("done", [])
-	var available: Array = chores.get("available", [])
+	var choresData = pd.get("chores", {"lastDay": -1, "done": [], "available": []})
+	var done: Array = choresData.get("done", [])
+	var available: Array = choresData.get("available", [])
 	var choreId = str(chore.get("id", ""))
 	if not available.has(choreId):
 		_showMessage("This chore is not available today.")
@@ -653,11 +894,11 @@ func _completeChore(chore: Dictionary) -> void:
 		return
 	if choreId != "":
 		done.append(choreId)
-		chores["done"] = done
-		pd["chores"] = chores
+		choresData["done"] = done
+		pd["chores"] = choresData
 
-	var reward = int(chore.get("reward", 0))
-	var savingsCut = int(round(float(reward) * CHORE_SAVINGS_RATE))
+	var reward = _getAdjustedChoreReward(chore)
+	var savingsCut = int(round(float(reward) * choreSavingsRate))
 	var cashGain = reward - savingsCut
 	var money = int(pd.get("money", 0))
 	var savings = int(pd.get("savingsSaved", 0))
@@ -703,17 +944,17 @@ func openInventory(inventoryName: String = "feed") -> void:
 	popupPanel.visible = true
 	inventoryPanel.visible = true
 	_populateInventoryList()
-	gameManagerRef.pauseGame()
-	petManagerRef.setThoughtVisible(false)
+	# Don't pause - inventory can be used during gameplay
+	_setThoughtSuppressed(true)
 
 
 func _onInvClosePressed() -> void:
-	# Close inventory and resume gameplay.
+	# Close inventory.
 	inventoryPanel.visible = false
 	popupPanel.visible = false
 	messageLabel.visible = false
-	gameManagerRef.resumeGame()
-	petManagerRef.setThoughtVisible(true)
+	# Don't resume - game wasn't paused
+	_setThoughtSuppressed(false)
 
 
 func _populateInventoryList() -> void:
@@ -721,10 +962,8 @@ func _populateInventoryList() -> void:
 	# clear children
 	for child in invList.get_children():
 		child.queue_free()
-	# load font if available
-	var fontRes = null
-	if FileAccess.file_exists("res://assets/fonts/pixelFont.ttf"):
-		fontRes = load("res://assets/fonts/pixelFont.ttf")
+	# use cached font
+	var fontRes = pixelFontRes
 
 	# get inventory
 	var inv: Dictionary = inventoryManagerRef.getInventory(currentInventoryName)
@@ -732,20 +971,16 @@ func _populateInventoryList() -> void:
 	if inv.size() == 0:
 		var label = Label.new()
 		label.text = "Empty"
-		if fontRes:
-			# apply font and size overrides directly on label
-			label.add_theme_font_override("font", fontRes)
-			label.add_theme_font_size_override("font_size", INVENTORY_ITEM_FONT_SIZE)
+		# apply font and size overrides directly on label
+		label.add_theme_font_override("font", fontRes)
+		label.add_theme_font_size_override("font_size", inventoryItemFontSize)
 		invList.add_child(label)
 		return
 
-	var labelTheme = null
-	var buttonTheme = null
-	if fontRes:
-		labelTheme = Theme.new()
-		labelTheme.set_font("font", "Label", fontRes)
-		buttonTheme = Theme.new()
-		buttonTheme.set_font("font", "Button", fontRes)
+	var labelTheme = Theme.new()
+	labelTheme.set_font("font", "Label", fontRes)
+	var buttonTheme = Theme.new()
+	buttonTheme.set_font("font", "Button", fontRes)
 
 	for itemId in inv.keys():
 		var raw = inv[itemId]
@@ -777,54 +1012,23 @@ func _createInventoryRow(itemId: String, itemData: Dictionary, itemDef: Dictiona
 	var nameLabel = Label.new()
 	nameLabel.text = "%s (x%d, uses left: %d)  %s" % [displayName, count, usesLeft, statsText]
 	nameLabel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	if labelTheme:
-		nameLabel.theme = labelTheme
-	else:
-		# if no theme, still try to apply font resource & size directly (attempt)
-		if FileAccess.file_exists("res://assets/fonts/pixelFont.ttf"):
-			var f = load("res://assets/fonts/pixelFont.ttf")
-			nameLabel.add_theme_font_override("font", f)
-			nameLabel.add_theme_font_size_override("font_size", INVENTORY_ITEM_FONT_SIZE)
-	# always set size override if possible
-	if FileAccess.file_exists("res://assets/fonts/pixelFont.ttf"):
-		var f2 = load("res://assets/fonts/pixelFont.ttf")
-		nameLabel.add_theme_font_override("font", f2)
-		nameLabel.add_theme_font_size_override("font_size", INVENTORY_ITEM_FONT_SIZE)
+	nameLabel.theme = labelTheme
+	nameLabel.add_theme_font_size_override("font_size", inventoryItemFontSize)
 
 	row.add_child(nameLabel)
 
 	var useButton = Button.new()
 	useButton.text = "Use"
-	if buttonTheme:
-		useButton.theme = buttonTheme
-	else:
-		if FileAccess.file_exists("res://assets/fonts/pixelFont.ttf"):
-			var fb = load("res://assets/fonts/pixelFont.ttf")
-			useButton.add_theme_font_override("font", fb)
-			useButton.add_theme_font_size_override("font_size", INVENTORY_BUTTON_FONT_SIZE)
-	# ensure size override if theme present
-	if FileAccess.file_exists("res://assets/fonts/pixelFont.ttf"):
-		var fb2 = load("res://assets/fonts/pixelFont.ttf")
-		useButton.add_theme_font_override("font", fb2)
-		useButton.add_theme_font_size_override("font_size", INVENTORY_BUTTON_FONT_SIZE)
+	useButton.theme = buttonTheme
+	useButton.add_theme_font_size_override("font_size", inventoryButtonFontSize)
 
 	useButton.pressed.connect(func() -> void: _onUseItem(itemId))
 	row.add_child(useButton)
 
 	var dropButton = Button.new()
 	dropButton.text = "Drop"
-	if buttonTheme:
-		dropButton.theme = buttonTheme
-	else:
-		if FileAccess.file_exists("res://assets/fonts/pixelFont.ttf"):
-			var fb3 = load("res://assets/fonts/pixelFont.ttf")
-			dropButton.add_theme_font_override("font", fb3)
-			dropButton.add_theme_font_size_override("font_size", INVENTORY_BUTTON_FONT_SIZE)
-	# ensure size override if theme present
-	if FileAccess.file_exists("res://assets/fonts/pixelFont.ttf"):
-		var fb4 = load("res://assets/fonts/pixelFont.ttf")
-		dropButton.add_theme_font_override("font", fb4)
-		dropButton.add_theme_font_size_override("font_size", INVENTORY_BUTTON_FONT_SIZE)
+	dropButton.theme = buttonTheme
+	dropButton.add_theme_font_size_override("font_size", inventoryButtonFontSize)
 
 	dropButton.pressed.connect(func() -> void: _onDropItem(itemId))
 	row.add_child(dropButton)
@@ -852,11 +1056,18 @@ func _onUseItem(itemId: String) -> void:
 	if not _canUseItem(effects):
 		_showMessage("No need to use this right now.")
 		return
-	if saveLoadManagerRef.playerData.has("stats"):
-		for stat in effects.keys():
-			var change = int(effects[stat])
-			var old = int(saveLoadManagerRef.playerData["stats"].get(stat, 0))
-			saveLoadManagerRef.playerData["stats"][stat] = clamp(old + change, 0, 100)
+	var appliedParts: Array = []
+	for stat in effects.keys():
+		var change = int(effects[stat])
+		var old = int(saveLoadManagerRef.playerData["stats"].get(stat, 0))
+		var newValue = clamp(old + change, 0, 100)
+		saveLoadManagerRef.playerData["stats"][stat] = newValue
+		var delta = newValue - old
+		if delta != 0:
+			var sign = "+" if delta > 0 else ""
+			appliedParts.append("%s %s%d" % [str(stat).capitalize(), sign, delta])
+	if appliedParts.size() > 0:
+		_showToast(", ".join(appliedParts))
 
 	itemData["uses"] = int(itemData.get("uses", 1)) - 1
 	if itemData["uses"] <= 0:
@@ -880,69 +1091,56 @@ func _onDropItem(itemId: String) -> void:
 # Shop UI creation & helpers
 func _ensureShopPanel() -> void:
 	# Cache shop UI nodes and item list containers.
-	if popupPanel == null:
-		return
-
-	var existing = popupPanel.get_node_or_null("shopPanel")
-	if existing and existing is Panel:
-		shopPanel = existing
-	else:
-		# do not create a complex runtime layout here; we map existing TSCN structure if present
-		shopPanel = existing
+	# do not create a complex runtime layout here; we map existing TSCN structure if present
+	shopPanel = popupPanel.get_node("shopPanel")
 	# make sure we have references to header labels and close button
-	if shopPanel != null:
-		shopPanel.visible = false
-		shopMoneyLabel = shopPanel.get_node_or_null("moneyLabel")
-		totalExpenseLabel = shopPanel.get_node_or_null("expensesTotalLabel")
-		shopCloseButton = shopPanel.get_node_or_null("closeButton")
-		if shopCloseButton != null:
-			shopCloseButton.pressed.connect(closeShop)
+	shopPanel.visible = false
+	shopMoneyLabel = shopPanel.get_node("moneyLabel")
+	totalExpenseLabel = shopPanel.get_node("expensesTotalLabel")
+	shopCloseButton = shopPanel.get_node("closeButton")
+	shopCloseButton.pressed.connect(closeShop)
 
-		# map TabContainer item lists (common TSCN structure)
-		shopTabContainer = shopPanel.get_node_or_null("TabContainer")
-		shopLists.clear()
-		# expecting tabs named feedTab, playTab, restTab, vetTab, cleanTab each containing itemList
-		if shopTabContainer != null:
-			shopTabContainer.tab_changed.connect(_onShopTabChanged)
-			for sectionName in SHOP_SECTIONS:
-				var tabNode = shopTabContainer.get_node_or_null(sectionName + "Tab")
-				if tabNode != null:
-					var listNode = tabNode.get_node_or_null("itemList")
-					if listNode != null and listNode is VBoxContainer:
-						shopLists[sectionName] = listNode
-		# fallback: single list path
-		if shopLists.size() == 0:
-			var single = shopPanel.get_node_or_null("VBoxContainer/ScrollContainer/itemList")
-			if single != null and single is VBoxContainer:
-				shopLists["feed"] = single
+	# map TabContainer item lists (common TSCN structure)
+	shopTabContainer = shopPanel.get_node("TabContainer")
+	shopLists.clear()
+	# expecting tabs named feedTab, playTab, restTab, vetTab, cleanTab each containing itemList
+	shopTabContainer.tab_changed.connect(_onShopTabChanged)
+	for sectionName in shopSections:
+		var tabNode = shopTabContainer.get_node(sectionName + "Tab")
+		var listNode = tabNode.get_node("itemList")
+		shopLists[sectionName] = listNode
+	# fallback: single list path
+	if shopLists.size() == 0:
+		var single = shopPanel.get_node("VBoxContainer/ScrollContainer/itemList")
+		shopLists["feed"] = single
 
 
 # Shop open/close
 func openShop(section: String = "feed") -> void:
-	# Show the shop and pause gameplay.
+	# Show the shop.
 	currentShopSection = section
 	popupPanel.visible = true
 	shopPanel.visible = true
 	_ensureEconomyData()
 	populateShopItems(section)
-	gameManagerRef.pauseGame()
-	petManagerRef.setThoughtVisible(false)
+	# Don't pause - shop can be used during gameplay
+	_setThoughtSuppressed(true)
 	_warnIfNearWeeklyLimit()
 func _onShopTabChanged(tabIndex: int) -> void:
 	# Switch shop list when the user changes tabs.
-	if tabIndex >= 0 and tabIndex < SHOP_SECTIONS.size():
-		currentShopSection = SHOP_SECTIONS[tabIndex]
+	if tabIndex >= 0 and tabIndex < shopSections.size():
+		currentShopSection = shopSections[tabIndex]
 		populateShopItems(currentShopSection)
 
 
 
 func closeShop() -> void:
-	# Close the shop and resume gameplay.
+	# Close the shop.
 	shopPanel.visible = false
 	popupPanel.visible = false
 	messageLabel.visible = false
-	gameManagerRef.resumeGame()
-	petManagerRef.setThoughtVisible(true)
+	# Don't resume - game wasn't paused
+	_setThoughtSuppressed(false)
 
 
 func populateShopItems(section: String) -> void:
@@ -967,17 +1165,12 @@ func populateShopItems(section: String) -> void:
 		return
 
 	# font/theme
-	var fontRes = null
-	if FileAccess.file_exists("res://assets/fonts/pixelFont.ttf"):
-		fontRes = load("res://assets/fonts/pixelFont.ttf")
+	var fontRes = pixelFontRes
 
-	var labelTheme = null
-	var buttonTheme = null
-	if fontRes:
-		labelTheme = Theme.new()
-		labelTheme.set_font("font", "Label", fontRes)
-		buttonTheme = Theme.new()
-		buttonTheme.set_font("font", "Button", fontRes)
+	var labelTheme = Theme.new()
+	labelTheme.set_font("font", "Label", fontRes)
+	var buttonTheme = Theme.new()
+	buttonTheme.set_font("font", "Button", fontRes)
 
 	var species = str(saveLoadManagerRef.playerData.get("species", ""))
 	var filteredItems: Array = []
@@ -1001,9 +1194,7 @@ func populateShopItems(section: String) -> void:
 	for itemDict in filteredItems:
 		var id = itemDict.get("id", "")
 		var price = int(itemDict.get("price", 0))
-		var itemDef = {}
-		if itemDb != null and itemDb.has_method("getItem"):
-			itemDef = itemDb.getItem(id)
+		var itemDef = itemDb.getItem(id)
 		var restoreStats: Dictionary = itemDef.get("restore", {})
 		var statsParts: Array = []
 		for statName in restoreStats.keys():
@@ -1017,24 +1208,14 @@ func populateShopItems(section: String) -> void:
 		var lbl = Label.new()
 		lbl.text = "%s — $%d | %s | %s" % [itemDef.get("name", id), price, statsText, usesText]
 		lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		if labelTheme:
-			lbl.theme = labelTheme
-			# set font size override on the label if available
-			lbl.add_theme_font_size_override("font_size", INVENTORY_ITEM_FONT_SIZE)
-		else:
-			if fontRes:
-				lbl.add_theme_font_override("font", fontRes)
-				lbl.add_theme_font_size_override("font_size", INVENTORY_ITEM_FONT_SIZE)
+		lbl.theme = labelTheme
+		# set font size override on the label if available
+		lbl.add_theme_font_size_override("font_size", inventoryItemFontSize)
 		row.add_child(lbl)
 		var buyButton = Button.new()
 		buyButton.text = "Buy"
-		if buttonTheme:
-			buyButton.theme = buttonTheme
-			buyButton.add_theme_font_size_override("font_size", INVENTORY_BUTTON_FONT_SIZE)
-		else:
-			if fontRes:
-				buyButton.add_theme_font_override("font", fontRes)
-				buyButton.add_theme_font_size_override("font_size", INVENTORY_BUTTON_FONT_SIZE)
+		buyButton.theme = buttonTheme
+		buyButton.add_theme_font_size_override("font_size", inventoryButtonFontSize)
 		# bind item id, price, and the explicit section so buy action knows target inventory
 		buyButton.pressed.connect(_buyShopItem.bind(id, price, section))
 		row.add_child(buyButton)
@@ -1042,20 +1223,14 @@ func populateShopItems(section: String) -> void:
 		target.add_child(row)
 
 	# update headers
-	if shopMoneyLabel != null:
-		shopMoneyLabel.text = "Money: $" + str(int(saveLoadManagerRef.playerData.get("money", 0)))
-	if totalExpenseLabel != null:
-		totalExpenseLabel.text = "Expenses: $" + str(int(saveLoadManagerRef.playerData.get("careExpenses", 0)))
+	shopMoneyLabel.text = "Money: $" + str(int(saveLoadManagerRef.playerData.get("money", 0)))
+	totalExpenseLabel.text = "Expenses: $" + str(int(saveLoadManagerRef.playerData.get("careExpenses", 0)))
 
 
 # Buy item
 func _buyShopItem(itemId: String, price: int, section: String) -> void:
 	# Spend money, add the item, and refresh UI.
 	# defensive checks
-	if saveLoadManagerRef == null:
-		push_warning("saveLoadManagerRef missing; cannot complete purchase.")
-		return
-
 	_ensureEconomyData()
 
 	var money = int(saveLoadManagerRef.playerData.get("money", 0))
@@ -1063,7 +1238,7 @@ func _buyShopItem(itemId: String, price: int, section: String) -> void:
 		_showMessage("Not enough money.")
 		return
 
-	var weeklyLimit = int(saveLoadManagerRef.playerData.get("weeklyLimit", WEEKLY_LIMIT_DEFAULT))
+	var weeklyLimit = int(saveLoadManagerRef.playerData.get("weeklyLimit", weeklyLimitDefault))
 	var weekTotal = _sumTransactions("expense", 7)
 	if weeklyLimit > 0 and (weekTotal + price) > weeklyLimit:
 		_showMessage("Weekly budget limit reached. Try chores or wait for a new week.")
@@ -1080,33 +1255,8 @@ func _buyShopItem(itemId: String, price: int, section: String) -> void:
 	_logTransaction("expense", section, itemId, price, _getNeedsTag(section))
 
 	# add to inventory (prefer inventory manager)
-	if inventoryManagerRef != null and inventoryManagerRef.has_method("addItem"):
-		# pass the explicit section so the item goes into the correct inventory bucket
-		inventoryManagerRef.addItem(section, itemId, 1)
-	else:
-		# fallback: write into playerData inventories directly and handle numeric/dict entries
-		var invs = saveLoadManagerRef.playerData.get("inventories", {})
-		if not invs.has(section):
-			invs[section] = {}
-		var inv = invs[section]
-		if inv.has(itemId):
-			var entry = inv[itemId]
-			if typeof(entry) == TYPE_DICTIONARY:
-				entry["count"] = int(entry.get("count", 0)) + 1
-				inv[itemId] = entry
-			else:
-				inv[itemId] = int(entry) + 1
-		else:
-			# determine uses from itemDb if available
-			var uses = 1
-			if itemDb != null and itemDb.has_method("getItem"):
-				var def = itemDb.getItem(itemId)
-				uses = int(def.get("uses", 1))
-			if uses > 1:
-				inv[itemId] = {"count": 1, "uses": uses}
-			else:
-				inv[itemId] = 1
-		saveLoadManagerRef.playerData["inventories"] = invs
+	# pass the explicit section so the item goes into the correct inventory bucket
+	inventoryManagerRef.addItem(section, itemId, 1)
 
 	# persist
 	saveLoadManagerRef.saveGame()

@@ -12,6 +12,9 @@
 [node name="gameManager" type="Node" parent="." unique_id=234766452]
 script = ExtResource("1_idj7w")
 
+[node name="itemDB" type="Node" parent="." unique_id=1908936356]
+script = ExtResource("6_v1gob")
+
 [node name="inventoryManager" type="Node" parent="." unique_id=527619751]
 script = ExtResource("2_rgh2o")
 
@@ -22,10 +25,8 @@ layer = 3
 z_index = 1
 
 [node name="pet" parent="." unique_id=766304925 instance=ExtResource("5_pbw6q")]
+position = Vector2(16, 67)
 script = null
 
 [node name="UI" parent="." unique_id=2027993166 instance=ExtResource("2_0wfyh")]
 z_index = 1
-
-[node name="itemDB" type="Node" parent="." unique_id=1908936356]
-script = ExtResource("6_v1gob")

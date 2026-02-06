@@ -1,9 +1,10 @@
 ## Game manager
-# Controls time, stat decay, autosave, and day progression.
+# This file runs the game clock and pet stat decay.
+# It also handles autosave and day changes.
 
 extends Node
 
-const dayLength: float = 300.0    # seconds in a full in-game day
+const dayLength: float = 60.0    # seconds in a full in-game day
 const statTick: float = 5.0       # how often to update pet stats (seconds)
 const saveTick: float = 30.0      # how often to auto-save (seconds)
 
@@ -57,7 +58,7 @@ func _process(delta: float) -> void:
 		var saves: int = int(saveAccumulator / saveTick)
 		saveAccumulator -= saves * saveTick
 		# call save in a loop to be explicit (usually saves == 1)
-		for _i in range(saves):
+		for i in range(saves):
 			saveLoadManager.saveGame()
 
 	# Advance day if we've passed a full day (can happen multiple times).

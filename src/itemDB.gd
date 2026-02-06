@@ -1,5 +1,6 @@
 ## Item database
-# Stores item names, restore stats, and use counts for the shop/inventory.
+# This file holds the shop item list and their effects.
+# Other scripts read this to show names, prices, and stat changes.
 
 extends Node
 
@@ -131,6 +132,6 @@ var itemCatalog = {
 	}
 }
 
-# Get an item definition safely.
+# Get an item definition by id.
 func getItem(itemId: String) -> Dictionary:
 	return itemCatalog.get(itemId, {})
