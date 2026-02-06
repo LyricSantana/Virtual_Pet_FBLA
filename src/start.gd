@@ -108,11 +108,11 @@ func _onStartPressed() -> void:
 	# If a user save exists, load and go straight into the game.
 	# Otherwise show the pet creation screen.
 	var loaded = saveLoadManager.loadGame()
-	if loaded:
+	if loaded and _hasValidPetData(saveLoadManager.playerData):
 		_changeToGame()
 		petManagerRef.setPlayerData(saveLoadManager.playerData)
-	else:
-		_showPetSelect()
+		return
+	_showPetSelect()
 
 
 func _onSettingsPressed() -> void:
@@ -213,6 +213,7 @@ func _onSettingsBackPressed() -> void:
 func _onDeletePressed() -> void:
 	# Delete the user save file.
 	saveLoadManager.deleteUserFile("player_save.json")
+	settingsPanel.visible = false
 
 
 func _onQuitPressed() -> void:
@@ -251,3 +252,12 @@ func _validatePetName(petName: String) -> String:
 	if regex.search(trimmed) == null:
 		return "Use letters and spaces only."
 	return ""
+
+
+func _hasValidPetData(pd: Dictionary) -> bool:
+	# Require a real name and species before starting the game.
+	var species = str(pd.get("species", "")).strip_edges()
+	if species != "cat" and species != "dog":
+		return false
+	var name = str(pd.get("name", "")).strip_edges()
+	return _validatePetName(name) == ""

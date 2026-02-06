@@ -857,6 +857,32 @@ text = "Submit"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="cancelNameButton" type="TextureButton" parent="popupPanel/changeNamePanel/vBoxContainer" unique_id=1784391261]
+process_mode = 3
+custom_minimum_size = Vector2(77, 26)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("20_38m54")
+texture_pressed = ExtResource("21_h3f0y")
+texture_hover = ExtResource("22_yamhi")
+stretch_mode = 4
+
+[node name="cancelNameLabel" type="Label" parent="popupPanel/changeNamePanel/vBoxContainer/cancelNameButton" unique_id=1883216643]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_font_sizes/font_size = 14
+text = "Cancel"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="errorLabel" type="Label" parent="popupPanel/changeNamePanel/vBoxContainer" unique_id=2005846358]
 process_mode = 3
 layout_mode = 2
@@ -1022,6 +1048,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="chorePanel" type="Panel" parent="popupPanel" unique_id=1068689742]
+visible = false
 z_index = 2
 layout_mode = 0
 offset_right = 640.0

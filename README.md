@@ -1,24 +1,37 @@
-# FBLA Virtual Pet Game 2026
-Project for Introduction to Programming for FBLA 2026 made using Godot (GDScript) and Aseprite (pixel art).
+# Virtual Pet FBLA (BudgetBuddy)
+A Godot 4 virtual pet game built for FBLA Introduction to Programming. Players adopt a cat or dog, manage pet stats, and learn budgeting through care expenses, a shop system, and chores.
 
-## 2026 Topic:
-Build a Virtual Pet
-Use your programming skills to create a digital pet that users can name, feed, and care for
-over time. Your pet should respond to how well it is treated, showing emotions, changing
-appearance or behavior, and developing based on the user’s actions.
-To expand your program, include a "cost of care" system to teach users about the financial
-responsibility of pet ownership. Track things like:
-• Food and supply costs
-• Vet visits or health care
-• Toy or activity purchases
-• Budget limits or in-game currency
+## Features
+- Pet selection and naming flow (cat or dog)
+- Stat-based pet care (hunger, happiness, energy, health, cleanliness)
+- Thought bubbles and animation changes based on needs
+- Shop and inventory system with item effects and costs
+- Budgeting mechanics: total expenses, weekly limit, savings goal
+- Chores system that rewards money for care items
+- Daily stat decay and in-game day progression
+- Autosave and settings (game speed, autosave toggle)
 
-Your program should include:
-• Customization (user names the pet, chooses type, etc.)
-• Pet care features (feed, play, rest, clean, health check)
-• Reactions based on care level (happy, sick, sad, energetic)
-• A running total of care-related expenses
-• Optional: savings goals or earning systems (e.g., chores or tasks to earn pet care funds)
-Encourage creativity in how the pet grows or changes over time: Could it evolve, learn tricks,
-or earn badges? Use any programming language or environment that demonstrates your
-understanding of basic logic, variables, conditionals, and functions.
+## How To Run
+1. Open the project in Godot 4.x.
+2. Run the main scene from the editor.
+
+## Project Structure
+- Scenes/ : Godot scenes for the main game, UI, start menu, and pet manager
+- src/ : GDScript logic and default save data
+- assets/ : Pixel art, sprites, backgrounds, and UI textures
+
+## Key Scripts
+- src/gameManager.gd: Game clock, stat decay, autosave, day changes
+- src/petManager.gd: Pet animation, thought bubble logic, pet walking
+- src/ui.gd: HUD, popups, shop, inventory, chores, reports, settings
+- src/start.gd: Start menu and pet setup flow
+- src/saveLoadManager.gd: JSON save/load, default merge, value clamping
+- src/inventoryManager.gd: Inventory CRUD helpers
+- src/itemDB.gd: Item definitions and stat effects
+
+## Save Data
+- Defaults: src/defaultSave.json
+- User save (runtime): user://player_save.json
+
+## Notes
+- Built with Godot 4.x and GDScript. Pixel art created in Aseprite.

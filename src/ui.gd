@@ -360,6 +360,8 @@ func onButtonPressed(button: TextureButton) -> void:
 			changeNamePressed()
 		"submitNameButton":
 			changePetName()
+		"cancelNameButton":
+			cancelChangeName()
 		"quitButton":
 			quitPressed()
 		"startScreenButton":
@@ -437,6 +439,18 @@ func changePetName() -> void:
 	popupPanel.visible = false
 	changeNamePanel.visible = false
 	gameManagerRef.resumeGame()
+	_setThoughtSuppressed(false)
+
+
+func cancelChangeName() -> void:
+	# Close the change name popup without saving.
+	changeNameInput.text = ""
+	errorLabel.text = ""
+	changeName.visible = false
+	popupPanel.visible = false
+	changeNamePanel.visible = false
+	gameManagerRef.resumeGame()
+	_setThoughtSuppressed(false)
 
 
 func _validatePetName(petName: String) -> String:

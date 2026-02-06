@@ -57,11 +57,10 @@ func _process(delta: float) -> void:
 	if saveAccumulator >= saveTick:
 		var saves: int = int(saveAccumulator / saveTick)
 		saveAccumulator -= saves * saveTick
-		# call save in a loop to be explicit (usually saves == 1)
 		for i in range(saves):
 			saveLoadManager.saveGame()
 
-	# Advance day if we've passed a full day (can happen multiple times).
+	# Advance day if we've passed a full day .
 	while secondsIntoDay >= dayLength:
 		secondsIntoDay -= dayLength
 		_advanceDay()
