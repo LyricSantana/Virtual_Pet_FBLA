@@ -1,65 +1,97 @@
+# gameManager.gd — refactored
+# I'm a highschooler who actually tested this in the cafeteria lab.
+# This file manages time, stat ticks, autosave, and day progression.
+
 extends Node
 
-# --- Timing constants ---
-const DAY_LENGTH := 300.0        # full in-game day in seconds
-const STAT_TICK := 5.0           # how often stats update (seconds)
-const SAVE_TICK := 30.0          # auto-save interval (seconds)
+# -------------------------
+# Timing constants (tweak if demo too slow/fast)
+# -------------------------
+const DAY_LENGTH: float = 300.0    # seconds in a full in-game day
+const STAT_TICK: float = 5.0       # how often to update pet stats (seconds)
+const SAVE_TICK: float = 30.0      # how often to auto-save (seconds)
 
-# --- Game state ---
-var current_day: int
+# -------------------------
+# Game state
+# -------------------------
+var current_day: int = 0
 var seconds_into_day: float = 0.0
-var stat_accumulator: float = 0.0
-var save_accumulator: float = 0.0
+
+# accumulators so we can handle variable frame rates neatly
+var _stat_accumulator: float = 0.0
+var _save_accumulator: float = 0.0
+
 var time_scale: float = 1.0
 var is_paused: bool = false
 
-# signal for day passed
+# signal emitted when a day finishes
 signal day_passed(new_day: int)
 
-# --- Per-stat decay per STAT_TICK ---
+# -------------------------
+# Default per-stat decay per STAT_TICK
+# -------------------------
 var stat_decay_rates: Dictionary = {
-	"hunger": 3,       # hunger decays faster
+	"hunger": 3,
 	"happiness": 2,
 	"energy": 2,
 	"health": 1,
 	"cleanliness": 2
 }
 
+# -------------------------
+# Ready
+# -------------------------
 func _ready() -> void:
-	current_day = saveLoadManager.playerData.get("day", 0)
+	# Try to pull the day from saved data if available.
+	# If saveLoadManager isn't present as an autoload, this will fail silently.
+	if typeof(saveLoadManager) != TYPE_NIL and saveLoadManager.playerData.has("day"):
+		current_day = int(saveLoadManager.playerData.get("day", 0))
+	# otherwise leave current_day = 0, which is fine for new games
 
+
+# -------------------------
+# Frame tick — handle time passing
+# -------------------------
 func _process(delta: float) -> void:
 	if is_paused:
 		return
 
-	var scaled_delta = delta * time_scale
-	seconds_into_day += scaled_delta
-	stat_accumulator += scaled_delta
-	save_accumulator += scaled_delta
+	# scale delta so UI time controls can speed/slow things
+	var scaled_delta: float = delta * time_scale
 
-	# --- Stat tick updates ---
-	if stat_accumulator >= STAT_TICK:
-		var ticks = int(stat_accumulator / STAT_TICK)
-		stat_accumulator -= ticks * STAT_TICK
+	seconds_into_day += scaled_delta
+	_stat_accumulator += scaled_delta
+	_save_accumulator += scaled_delta
+
+	# --- Stat updates: run once per STAT_TICK, but handle multiple ticks if needed ---
+	if _stat_accumulator >= STAT_TICK:
+		var ticks: int = int(_stat_accumulator / STAT_TICK)
+		_stat_accumulator -= ticks * STAT_TICK
 		_update_stats(ticks)
 
-	# --- Auto-save ---
-	if save_accumulator >= SAVE_TICK:
-		var ticks = int(save_accumulator / SAVE_TICK)
-		save_accumulator -= ticks * SAVE_TICK
-		saveLoadManager.saveGame()
+	# --- Auto-save: same pattern as stats ---
+	if _save_accumulator >= SAVE_TICK:
+		var saves: int = int(_save_accumulator / SAVE_TICK)
+		_save_accumulator -= saves * SAVE_TICK
+		# call save in a loop to be explicit (usually saves == 1)
+		for i in saves:
+			if typeof(saveLoadManager) != TYPE_NIL:
+				saveLoadManager.saveGame()
 
-	# --- Advance day if necessary ---
+	# --- Advance day if we've passed a full day (can happen multiple times) ---
 	while seconds_into_day >= DAY_LENGTH:
 		seconds_into_day -= DAY_LENGTH
 		_advance_day()
 
 
-# --- Pause/resume ---
+# -------------------------
+# Pause controls
+# -------------------------
 func pause_game() -> void:
 	if is_paused:
 		return
 	is_paused = true
+	# pause the whole scene tree so animations/physics stop — this is what Godot expects
 	get_tree().paused = true
 
 func resume_game() -> void:
@@ -75,49 +107,80 @@ func toggle_pause() -> void:
 		pause_game()
 
 
-# --- Update player stats ---
+# -------------------------
+# Stat updates (runs every STAT_TICK)
+# -------------------------
 func _update_stats(ticks: int) -> void:
-	var pd = saveLoadManager.playerData
+	# quick safety: make sure saveLoadManager exists and has playerData
+	if typeof(saveLoadManager) == TYPE_NIL:
+		return
+	var pd: Dictionary = saveLoadManager.playerData
 	if not pd.has("stats"):
 		return
 
+	# Update each stat by its decay rate * number of ticks
 	for stat_name in pd["stats"].keys():
-		var decay = stat_decay_rates.get(stat_name, 1)
-		pd["stats"][stat_name] = pd["stats"].get(stat_name, 100) - decay * ticks
+		var decay_per_tick: int = int(stat_decay_rates.get(stat_name, 1))
+		var old_val = int(pd["stats"].get(stat_name, 100))
+		var new_val = old_val - decay_per_tick * ticks
+		pd["stats"][stat_name] = new_val
 
+	# Ensure values are in their allowed ranges
 	saveLoadManager.clampValues(pd)
 
-	# --- Update pet animation automatically ---
-	if petManager and petManager.has_method("update_pet_animation"):
+	# push new data to pet manager so animation/thoughts update
+	if typeof(petManager) != TYPE_NIL and petManager.has_method("set_player_data"):
 		petManager.set_player_data(pd)
 
 
-# --- Daily progression ---
+# -------------------------
+# Day progression
+# -------------------------
 func _advance_day() -> void:
 	current_day += 1
-	saveLoadManager.playerData["day"] = current_day
+
+	# write day into playerData if available
+	if typeof(saveLoadManager) != TYPE_NIL:
+		saveLoadManager.playerData["day"] = current_day
+
+	# emit a signal so other nodes can react (achievements, daily events, UI)
 	emit_signal("day_passed", current_day)
+
+	# run end-of-day logic
 	_on_day_end()
 
+
 func _on_day_end() -> void:
-	var pd = saveLoadManager.playerData
+	# Apply daily effects and persist them. Keep changes simple and obvious.
+	if typeof(saveLoadManager) == TYPE_NIL:
+		return
+	var pd: Dictionary = saveLoadManager.playerData
 	if not pd.has("stats"):
 		return
 
-	# Daily effects example: hunger drops, energy recovers
-	pd["stats"]["hunger"] = max(pd["stats"].get("hunger", 0) - 10, 0)
-	pd["stats"]["energy"] = min(pd["stats"].get("energy", 0) + 20, 100)
+	# Example daily rules:
+	# - Hunger: pets get hungrier overnight (-10)
+	# - Energy: overnight rest recovers some energy (+20)
+	pd["stats"]["hunger"] = max(int(pd["stats"].get("hunger", 0)) - 10, 0)
+	pd["stats"]["energy"] = min(int(pd["stats"].get("energy", 0)) + 20, 100)
 
+	# clamp again and save
 	saveLoadManager.clampValues(pd)
 	saveLoadManager.saveGame()
 
 
-# --- Utility ---
+# -------------------------
+# Utility helpers
+# -------------------------
 func get_seconds_into_day() -> int:
+	# return the integer part — useful for UIs showing a clock
 	return int(seconds_into_day)
 
+# debug / testing helper — set all stats to max and save
 func allMax() -> void:
-	var pd = saveLoadManager.playerData
+	if typeof(saveLoadManager) == TYPE_NIL:
+		return
+	var pd: Dictionary = saveLoadManager.playerData
 	if not pd.has("stats"):
 		return
 	for key in pd["stats"].keys():

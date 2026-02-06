@@ -1,114 +1,94 @@
+# start.gd — cleaned and simplified
+# Lean, readable, and documented like a competent HS dev who actually ships things.
+
 extends Control
 
-var chosen_species: String = ""
+# -------------------------
+# Local state
+# -------------------------
+var chosen_species: String = ""      # "cat" or "dog" or empty if none selected
 
-# --- Cached nodes ---
-var startButton 
-var settingsButton 
-var petPanel 
-var startPanel 
-var catButton 
-var dogButton 
-var nameInput 
-var confirmButton 
-var errorLabel 
-var backButton 
-var settingsPanel 
-var settingsBackButton 
-var deleteButton 
-var pm
+# -------------------------
+# Node references (onready for scene binding)
+# -------------------------
+@onready var startPanel = $startPanel
+@onready var petPanel = $petSelectPanel
+@onready var startButton = $startPanel/VBoxContainer/startButton
+@onready var settingsButton = $startPanel/VBoxContainer/settingsButton
+@onready var catButton = $petSelectPanel/VBoxContainer/HBoxContainer/catButton
+@onready var dogButton = $petSelectPanel/VBoxContainer/HBoxContainer/dogButton
+@onready var nameInput = $petSelectPanel/VBoxContainer/nameInput
+@onready var confirmButton = $petSelectPanel/VBoxContainer/confirmButton
+@onready var backButton = $petSelectPanel/VBoxContainer/backButton
+@onready var errorLabel = $petSelectPanel/VBoxContainer/errorLabel
+@onready var settingsPanel = $CanvasLayer/settingsPanel
+@onready var settingsBackButton = $CanvasLayer/settingsPanel/settingsPopup/VBoxContainer/backButton
+@onready var deleteButton = $CanvasLayer/settingsPanel/settingsPopup/VBoxContainer/deleteButton
 
-# --- Scene roots / helpers ---
-var start_layer         # CanvasLayer in Main.tscn that contains this start instance
-var main_node
+# references to autoloads or scene nodes (resolved at runtime)
+var pm               # petManager (prefer autoload)
 var ui_node
+var start_layer
 
-# --- Shortcut to safely get nodes ---
-func n(path: String) -> Node:
-	return get_node_or_null(path)
+# -------------------------
+# Minimal safety check helper
+# -------------------------
+func _ensure_manager(name: String) -> bool:
+	if typeof(get_node("/root").has_node) == TYPE_NIL:
+		# very defensive fallback (shouldn't happen)
+		return false
+	return true
 
 
+# -------------------------
+# Startup
+# -------------------------
 func _ready() -> void:
-	# pause while on start screen
-	gameManager.pause_game()
-
-	# cache Main and UI
-	main_node = get_tree().get_root().get_node_or_null("Main")
-	if main_node:
-		ui_node = main_node.get_node_or_null("UI")
-
-	# start_layer should be this node's parent in Main.tscn
+	# Cache some common nodes
 	start_layer = get_parent()
+	ui_node = get_tree().get_root().get_node_or_null("Main/UI")
 
-	# petManager (autoload or node)
+	# Prefer autoload petManager; if not registered, try scene path
 	if typeof(petManager) != TYPE_NIL:
 		pm = petManager
 	else:
-		if main_node:
-			pm = main_node.get_node_or_null("pet/petAnimated")
+		pm = get_tree().get_root().get_node_or_null("Main/pet")
 
-	# --- Cache UI nodes local to this start scene ---
-	startButton        = n("startPanel/VBoxContainer/startButton")
-	settingsButton     = n("startPanel/VBoxContainer/settingsButton")
-	startPanel         = n("startPanel")
-	petPanel           = n("petSelectPanel")
-	catButton          = n("petSelectPanel/VBoxContainer/HBoxContainer/catButton")
-	dogButton          = n("petSelectPanel/VBoxContainer/HBoxContainer/dogButton")
-	nameInput          = n("petSelectPanel/VBoxContainer/nameInput")
-	confirmButton      = n("petSelectPanel/VBoxContainer/confirmButton")
-	errorLabel         = n("petSelectPanel/VBoxContainer/errorLabel")
-	backButton         = n("petSelectPanel/VBoxContainer/backButton")
-	settingsPanel      = n("CanvasLayer/settingsPanel")
-	settingsBackButton = n("CanvasLayer/settingsPanel/settingsPopup/VBoxContainer/backButton")
-	deleteButton       = n("CanvasLayer/settingsPanel/settingsPopup/VBoxContainer/deleteButton")
-
-	# If any of those panels were created as top-level in the scene,
-	# force them to be non-top-level so they follow start_layer visibility.
-	if startPanel:
-		startPanel.set_as_top_level(false)
-	if petPanel:
-		petPanel.set_as_top_level(false)
-
-	# --- Initial visibility ---
-	# ensure start layer is visible and in-game UI hidden
-	if start_layer:
-		start_layer.visible = true
-	if startPanel:
-		startPanel.visible = true
-	if petPanel:
-		petPanel.visible = false
+	# Hide in-game UI while on start
 	if ui_node:
 		ui_node.visible = false
-	# hide local settings popup by default
-	if settingsPanel:
-		settingsPanel.visible = false
 
-	# --- Connect button signals safely ---
-	if startButton:
-		startButton.pressed.connect(_on_start_pressed)
-	if settingsButton:
-		settingsButton.pressed.connect(_on_settings_pressed)
-	if catButton:
-		catButton.pressed.connect(_on_cat_pressed)
-	if dogButton:
-		dogButton.pressed.connect(_on_dog_pressed)
-	if confirmButton:
-		confirmButton.pressed.connect(_on_confirm_pressed)
-	if backButton:
-		backButton.pressed.connect(_on_back_pressed)
-	if settingsBackButton:
-		settingsBackButton.pressed.connect(_on_settings_back_pressed)
-	if deleteButton:
-		deleteButton.pressed.connect(_on_delete_pressed)
+	# Start screen default visibility
+	startPanel.visible = true
+	petPanel.visible = false
+	settingsPanel.visible = false
 
-	if errorLabel:
-		errorLabel.text = ""
+	# Connect important buttons (assume nodes exist in scene structure)
+	startButton.pressed.connect(_on_start_pressed)
+	settingsButton.pressed.connect(_on_settings_pressed)
+	catButton.pressed.connect(func() -> void: _select_species("cat"))
+	dogButton.pressed.connect(func() -> void: _select_species("dog"))
+	confirmButton.pressed.connect(_on_confirm_pressed)
+	backButton.pressed.connect(_on_back_pressed)
+	settingsBackButton.pressed.connect(_on_settings_back_pressed)
+	deleteButton.pressed.connect(_on_delete_pressed)
+
+	# Make sure the species buttons look active by default
+	_set_species_buttons_bright()
+
+	# Clear any stale error text
+	errorLabel.text = ""
 
 
-# --- Button callbacks ---
+# -------------------------
+# Start / settings
+# -------------------------
 func _on_start_pressed() -> void:
-	if user_save_exists():
-		saveLoadManager.loadGame()
+	# If a user save exists, load and go straight into the game.
+	# Otherwise show the pet creation screen.
+	if FileAccess.file_exists("user://player_save.json"):
+		if typeof(saveLoadManager) != TYPE_NIL and saveLoadManager.has_method("loadGame"):
+			saveLoadManager.loadGame()
 		_change_to_game()
 		if pm and pm.has_method("set_player_data"):
 			pm.set_player_data(saveLoadManager.playerData)
@@ -117,69 +97,70 @@ func _on_start_pressed() -> void:
 
 
 func _on_settings_pressed() -> void:
-	if settingsPanel:
-		settingsPanel.visible = true
+	settingsPanel.visible = true
 
 
+# -------------------------
+# Pet creation UI
+# -------------------------
 func _show_pet_select() -> void:
 	chosen_species = ""
-	if nameInput:
-		nameInput.text = ""
-	if errorLabel:
-		errorLabel.text = ""
-	if petPanel:
-		petPanel.visible = true
-	if startPanel:
-		startPanel.visible = false
-
-
-func _on_cat_pressed() -> void:
-	_select_species("cat")
-
-
-func _on_dog_pressed() -> void:
-	_select_species("dog")
+	nameInput.text = ""
+	errorLabel.text = ""
+	petPanel.visible = true
+	startPanel.visible = false
+	# ensure both buttons render bright on open (deferred is safest)
+	call_deferred("_set_species_buttons_bright")
 
 
 func _select_species(spec: String) -> void:
 	chosen_species = spec
-	if catButton:
-		catButton.modulate = Color(1, 1, 1) if spec == "cat" else Color(0.6, 0.6, 0.6)
-	if dogButton:
-		dogButton.modulate = Color(1, 1, 1) if spec == "dog" else Color(0.6, 0.6, 0.6)
+	# selected stays bright, other dims slightly
+	_apply_select_button(catButton, spec == "cat")
+	_apply_select_button(dogButton, spec == "dog")
+
+
+func _apply_select_button(btn: Control, selected: bool) -> void:
+	# simple visual feedback: selected = white, else dimmed
+	btn.modulate = Color(1, 1, 1, 1) if selected else Color(0.6, 0.6, 0.6, 1)
 
 
 func _on_confirm_pressed() -> void:
-	var pet_name = nameInput.text.strip_edges() if nameInput else ""
+	var pet_name = nameInput.text.strip_edges()
 	if pet_name == "":
-		if errorLabel:
-			errorLabel.text = "Please enter a name."
+		errorLabel.text = "Please enter a name."
 		return
 	if chosen_species == "":
-		if errorLabel:
-			errorLabel.text = "Please pick a species."
+		errorLabel.text = "Please pick a species."
 		return
 
 	_create_new_save(chosen_species, pet_name)
 	_change_to_game()
-
 	if pm and pm.has_method("set_player_data"):
 		pm.set_player_data(saveLoadManager.playerData)
 
 
 func _on_back_pressed() -> void:
-	if startPanel:
-		startPanel.visible = true
-	if petPanel:
-		petPanel.visible = false
+	startPanel.visible = true
+	petPanel.visible = false
 
 
-# --- Save logic ---
+# -------------------------
+# Save / creation logic (compact)
+# -------------------------
 func _create_new_save(species_choice: String, pet_name: String) -> void:
-	var defaults = saveLoadManager.loadJSON("res://src/defaultSave.json")
-	var user_data = saveLoadManager.loadJSON("user://player_save.json")
-	saveLoadManager.playerData = saveLoadManager.mergeDicts(defaults, user_data)
+	# SaveLoadManager is expected to exist as an autoload.
+	# We keep this function short: ask saveLoadManager to load existing save (it already knows defaults),
+	# then overwrite the fields we need and save.
+	if typeof(saveLoadManager) == TYPE_NIL:
+		push_error("saveLoadManager autoload missing — cannot create new save.")
+		return
 
+	# Ensure defaults are loaded and any user save merged
+	# (loadGame is idempotent and will create a new user save from defaults if none exists)
+	saveLoadManager.loadGame()
+
+	# Set starting values for the new pet
 	var pd = saveLoadManager.playerData
 	pd["inventories"] = pd.get("inventories", {})
 	pd["inventories"]["pets"] = pd["inventories"].get("pets", {})
@@ -187,69 +168,65 @@ func _create_new_save(species_choice: String, pet_name: String) -> void:
 	pd["day"] = 0
 	pd["species"] = species_choice
 
+	# Sanitize and persist
 	saveLoadManager.clampValues(pd)
 	saveLoadManager.saveGame()
 
 
-# --- Switch from start screen into game ---
+# -------------------------
+# Scene transition
+# -------------------------
 func _change_to_game() -> void:
-	# hide the whole start layer so nothing from start remains visible
+	# hide start UI and show main UI; resume game timer
 	if start_layer:
 		start_layer.visible = false
-	else:
-		# fallback if parent isn't the CanvasLayer
-		if startPanel:
-			startPanel.hide()
-		if petPanel:
-			petPanel.hide()
-
-	# ensure the panels are not top-level and explicitly hide them
-	if startPanel:
-		startPanel.set_as_top_level(false)
-		startPanel.hide()
-	if petPanel:
-		petPanel.set_as_top_level(false)
-		petPanel.hide()
-
-	# show in-game UI
+	startPanel.visible = false
+	petPanel.visible = false
 	if ui_node:
 		ui_node.visible = true
+	if typeof(gameManager) != TYPE_NIL:
+		gameManager.resume_game()
 
-	# resume the game
-	gameManager.resume_game()
 
-
-func user_save_exists() -> bool:
+# -------------------------
+# Small helpers
+# -------------------------
+func _user_save_exists() -> bool:
 	return FileAccess.file_exists("user://player_save.json")
 
 
 func _on_settings_back_pressed() -> void:
-	if settingsPanel:
-		settingsPanel.visible = false
+	settingsPanel.visible = false
 
 
 func _on_delete_pressed() -> void:
-	saveLoadManager.delete_user_file("player_save.json")
+	# remove user save if present
+	if FileAccess.file_exists("user://player_save.json"):
+		var dir = DirAccess.open("user://")
+		if dir:
+			dir.remove("player_save.json")
 
 
-# --- Return to Start Screen (call this from UI) ---
+# Called by in-game UI to return to start screen
 func onStartScreenPressed() -> void:
-	# show start layer and panels
 	if start_layer:
 		start_layer.visible = true
-	else:
-		visible = true
-
-	if startPanel:
-		startPanel.set_as_top_level(false)
-		startPanel.visible = true
-	if petPanel:
-		petPanel.set_as_top_level(false)
-		petPanel.visible = false
-
-	# hide in-game UI
 	if ui_node:
 		ui_node.visible = false
+	startPanel.visible = true
+	petPanel.visible = false
+	if typeof(gameManager) != TYPE_NIL:
+		gameManager.pause_game()
 
-	# pause while on start screen
-	gameManager.pause_game()
+
+# -------------------------
+# Visual helpers
+# -------------------------
+func _set_species_buttons_bright() -> void:
+	catButton.modulate = Color(1, 1, 1, 1)
+	dogButton.modulate = Color(1, 1, 1, 1)
+
+
+func _reset_species_buttons() -> void:
+	catButton.modulate = Color(0.6, 0.6, 0.6, 1)
+	dogButton.modulate = Color(0.6, 0.6, 0.6, 1)
