@@ -33,6 +33,15 @@
 [ext_resource type="Texture2D" uid="uid://bua5nq15emjap" path="res://assets/sprites/buttons/brownHover.png" id="37_tlqq8"]
 [ext_resource type="Texture2D" uid="uid://bqt80feboici2" path="res://assets/sprites/shopWindow.png" id="38_q6a8d"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qvwwb"]
+bg_color = Color(0.029843869, 0.029843869, 0.029843869, 0.43137255)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+
 [sub_resource type="Theme" id="Theme_3wlde"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dmln7"]
@@ -95,6 +104,7 @@ layout_mode = 2
 [node name="nameLabel" type="Label" parent="labels/nameBox" unique_id=203175633]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_ua6yw")
+theme_override_styles/normal = SubResource("StyleBoxFlat_qvwwb")
 text = "Name: "
 
 [node name="changeNameButton" type="TextureButton" parent="labels/nameBox" unique_id=30408023]

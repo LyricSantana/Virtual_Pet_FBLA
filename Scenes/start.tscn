@@ -32,7 +32,7 @@ bg_color = Color(0, 0, 0, 0.6862745)
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g3i1d"]
 texture = ExtResource("18_aox1m")
 
-[node name="start" type="Control" unique_id=134240700]
+[node name="Control" type="Control" unique_id=134240700]
 process_mode = 3
 layout_mode = 3
 anchors_preset = 15
@@ -257,7 +257,7 @@ grow_vertical = 2
 theme_override_fonts/font = ExtResource("7_gsp51")
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_vp7ys")
-text = " BudgetBuddy "
+text = "Finance Friends"
 horizontal_alignment = 1
 vertical_alignment = 1
 
